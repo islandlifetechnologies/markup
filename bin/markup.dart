@@ -22,6 +22,7 @@ void main(List<String> args) async {
     }
   });
   final logger = Logger('main');
+  final cd = Directory('.');
 
   final parser = ArgParser()
     ..addOption(
@@ -52,7 +53,7 @@ void main(List<String> args) async {
 
   final parsed = parser.parse(args);
   final level =
-      Level.LEVELS.where((l) => l.name == parsed['level']).firstOrNull ??
+      Level.LEVELS.where((l) => l.name == parsed['log']).firstOrNull ??
       Level.INFO;
   Logger.root.level = level;
 
@@ -71,22 +72,36 @@ void main(List<String> args) async {
   Directory? outDir;
   if (output != null) {
     outDir = Directory(output);
-    if (outDir.existsSync()) {
-      outDir.deleteSync(recursive: true);
+    if (!dryRun) {
+      if (outDir.existsSync()) {
+        outDir.deleteSync(recursive: true);
+      }
+      outDir.createSync(recursive: true);
     }
-    outDir.createSync(recursive: true);
   }
 
-  final include = Glob(parsed['input'] as String, recursive: true);
+  final include = Glob(parsed['include'] as String, recursive: true);
 
-  for (final file in include.listSync().whereType<File>()) {
+  for (final file in include.listSync().whereType<File>().where((f) {
+    // Ignore all hidden files
+    final parts = f.absolute.path
+        .split('/')
+        .where((p) => p != '.' && p != '..');
+    return parts.where((p) => p.startsWith('.')).isEmpty;
+  })) {
     logger.info('Processing: ${file.path}');
     final scanner = MarkdownScanner.fromFile(
       file,
       output: outDir == null
           ? null
           : Directory(
-              p.relative(outDir.absolute.path, from: file.absolute.path),
+              p.join(
+                outDir.absolute.path,
+                p.relative(
+                  p.dirname(file.absolute.path),
+                  from: cd.absolute.path,
+                ),
+              ),
             ),
     );
     final doc = scanner.scan();
