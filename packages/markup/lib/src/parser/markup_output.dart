@@ -1,4 +1,4 @@
-import 'package:markup/markup.dart';
+import '../../markup.dart';
 
 class MarkupOutput(super.contents, {required super.end, required super.start})
     extends MarkupSection {

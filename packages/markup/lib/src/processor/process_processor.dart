@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:logging/logging.dart';
-import 'package:markup/markup.dart';
+
+import '../../markup.dart';
 
 part 'process_processor.g.dart';
 

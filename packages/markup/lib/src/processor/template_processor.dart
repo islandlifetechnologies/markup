@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:markup/markup.dart';
 import 'package:template_expressions/template_expressions.dart';
+
+import '../../markup.dart';
 
 part 'template_processor.g.dart';
 
@@ -64,7 +65,9 @@ class _Params({
   final _TemplateSyntax syntax = _TemplateSyntax.standard,
   final String? template,
 }) {
-  this : assert(file != null || template != null);
+  this
+    : assert(file != null || template != null),
+      assert(file == null || template == null);
 
   factory fromJson(Map<String, dynamic> json) => _$ParamsFromJson(json);
 }

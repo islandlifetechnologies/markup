@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:markup/markup.dart';
+import '../../markup.dart';
 
 class MarkdownScanner(
   final String input, {

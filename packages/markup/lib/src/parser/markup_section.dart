@@ -1,4 +1,4 @@
-import 'package:markup/src/parser/markdown_section.dart';
+import 'markdown_section.dart';
 
 abstract class MarkupSection(
   super.contents, {

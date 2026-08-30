@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
-import 'package:markup/markup.dart';
+
+import '../markup.dart';
 
 typedef ProcessorBuilder = MarkupProcessor Function(MarkupDirective section);
 

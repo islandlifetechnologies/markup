@@ -1,5 +1,6 @@
-import 'package:markup/markup.dart';
 import 'package:yaon/yaon.dart';
+
+import '../../markup.dart';
 
 class MarkupDirective(
   super.contents, {

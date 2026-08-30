@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:markup/markup.dart';
+
+import '../../markup.dart';
 
 part 'file_processor.g.dart';
 

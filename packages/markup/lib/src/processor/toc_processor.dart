@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:markup/markup.dart';
+
+import '../../markup.dart';
 
 part 'toc_processor.g.dart';
 
@@ -87,7 +88,7 @@ class TocProcessor(
           count++;
         }
         slugs.add(realSlug);
-        toc.add(_TocEntry(depth, title, realSlug));
+        toc.add(_TocEntry(level: depth, slug: realSlug, title: title));
       }
     }
 
@@ -144,10 +145,8 @@ class _Params({final String? bullet = '-'}) {
   factory fromJson(Map<String, dynamic> json) => _$ParamsFromJson(json);
 }
 
-class _TocEntry {
-  _TocEntry(this.level, this.title, this.slug);
-
-  final int level;
-  final String title;
-  final String slug;
-}
+class _TocEntry({
+  required final int level,
+  required final String slug,
+  required final String title,
+});

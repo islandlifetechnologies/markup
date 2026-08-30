@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:markup/markup.dart';
+import '../../markup.dart';
 
 class MarkdownDocument(
   final List<MarkdownSection> _sections, {

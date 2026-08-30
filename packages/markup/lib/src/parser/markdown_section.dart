@@ -1,4 +1,4 @@
-import 'package:markup/markup.dart';
+import '../../markup.dart';
 
 typedef SectionBuilder = MarkdownSection Function(String contents);
 

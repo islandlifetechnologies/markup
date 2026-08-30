@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:logging/logging.dart';
-import 'package:markup/markup.dart';
 import 'package:path/path.dart' as p;
 import 'package:template_expressions/template_expressions.dart';
+
+import '../../markup.dart';
 
 typedef FileSystemEntityBuilder = T Function<T extends FileSystemEntity>(
   String path,

@@ -1,4 +1,4 @@
-import 'package:markup/markup.dart';
+import '../../markup.dart';
 
 class MarkupException(
   final String message, {
