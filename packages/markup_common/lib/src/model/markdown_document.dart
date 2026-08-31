@@ -1,19 +1,12 @@
 import 'dart:collection';
 
-import '../../markup.dart';
+import 'package:markup_common/markup_common.dart';
 
 class MarkdownDocument(
   final List<MarkdownSection> _sections, {
   required final String outPath,
   required final String path,
-  MarkupRegistry? registry,
 }) extends ListBase<MarkdownSection> {
-  this {
-    _registry = registry ?? MarkupRegistry();
-  }
-
-  late final MarkupRegistry _registry;
-
   void insertAfter(MarkdownSection toLocate, MarkdownSection toInsert) {
     final index = _sections.indexOf(toLocate);
     _sections.insert(index + 1, toInsert);
@@ -35,13 +28,13 @@ class MarkdownDocument(
   set length(int newLength) =>
       throw Exception('Cannot change the length of MarkdownDocument');
 
-  Future<MarkdownDocument> process() async {
+  Future<MarkdownDocument> process(MarkupRegistry registry) async {
     final result = <MarkdownSection>[];
 
     for (final section in _sections.where((s) => s is! MarkupOutput)) {
       result.add(section);
       if (section is MarkupDirective) {
-        final processor = _registry.create(section);
+        final processor = registry.create(section);
         if (!processor.postProcessor) {
           final output = await processor.process(this);
           result.add(output);
@@ -53,7 +46,7 @@ class MarkdownDocument(
 
     for (final section in _sections.where((s) => s is! MarkupOutput)) {
       if (section is MarkupDirective) {
-        final processor = _registry.create(section);
+        final processor = registry.create(section);
         if (processor.postProcessor) {
           final output = await processor.process(doc);
           doc.insertAfter(section, output);

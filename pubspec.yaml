@@ -1,0 +1,9 @@
+name: _
+
+environment:
+  sdk: ^3.13.0
+
+workspace:
+  - packages/markup
+  - packages/markup_common
+  - packages/markup_mermaid

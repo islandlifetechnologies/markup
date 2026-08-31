@@ -1,11 +1,10 @@
 import 'dart:io';
 
-
 import '../../markup.dart';
 
-part 'process_processor.g.dart';
+part 'plugin_processor.g.dart';
 
-typedef ProcessRunner = String Function({
+typedef PluginRunner = String Function({
   required List<String> args,
   required String command,
   required bool ignoreExitCode,
@@ -14,7 +13,7 @@ typedef ProcessRunner = String Function({
   required Directory workingDirectory,
 });
 
-class ProcessProcessor(
+class PluginProcessor(
   super.directive, {
   final ProcessRunner runner = _defaultRunner,
   super.type = kType,
@@ -22,7 +21,7 @@ class ProcessProcessor(
   this {
     _params = _Params.fromJson((section as MarkupDirective).params);
   }
-  static const kType = 'process';
+  static const kType = 'plugin';
 
   late final _Params _params;
 

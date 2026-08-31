@@ -22,7 +22,10 @@ markup ${kPubspec.version}
 
 -i, --include    The search glob to find the file or files to modify.
                  (defaults to "**/*.md")
+-l, --log        Log level to use.
+                 [ALL, FINEST, FINER, FINE, CONFIG, INFO (default), WARNING, SEVERE, SHOUT, OFF]
 -o, --output     If set, all results will be written to this path and it's sub paths.
+    --dry-run    Perform a dry run, print all the logs, but do not write any Markdown files.
     --help       Display this message
     --version    Display version information
 <!-- /markup:output -->

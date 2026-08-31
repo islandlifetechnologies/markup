@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:logging/logging.dart';
+import 'package:markup_common/markup_common.dart';
 import 'package:path/path.dart' as p;
-import 'package:template_expressions/template_expressions.dart';
-
-import '../../markup.dart';
 
 typedef FileSystemEntityBuilder = T Function<T extends FileSystemEntity>(
   String path,
@@ -62,7 +59,14 @@ abstract class MarkupProcessor(
     return entity as F;
   }
 
-  /// Process the given source [doc].  This then returns the output that needs
-  /// to be added to the document.
+  /// Processes the directive and returns the generated output.  The [docPath]
+  /// is the absolute path to the markdown document being processed.
   FutureOr<MarkupOutput> process(MarkdownDocument doc);
+
+  /// Post processes the directive.  The passed in [sections] will include the
+  /// output of all directives that are not post processors.  This will only be
+  /// called if the processor is a post processor.  The [docPath] is the
+  /// absolute path to the markdown document being processed.
+  FutureOr<MarkupOutput> postProcess(MarkdownDocument doc) =>
+      throw UnimplementedError('Not a post processor');
 }

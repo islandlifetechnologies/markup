@@ -1,11 +1,8 @@
 import 'dart:io';
 
-import 'package:json_annotation/json_annotation.dart';
-import 'package:logging/logging.dart';
+import 'package:markup/markup.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart' as p;
-
-import '../../markup.dart';
 
 part 'drawio_processor.g.dart';
 

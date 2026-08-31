@@ -16,7 +16,7 @@ void main() {
       output: output,
     );
     final doc = scanner.scan();
-    final result = await doc.process();
+    final result = await doc.process(DefaultMarkupRegistry());
 
     File(p.join(output.path, 'full_processing.md'))
       ..createSync(recursive: true)

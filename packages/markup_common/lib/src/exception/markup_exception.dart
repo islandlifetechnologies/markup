@@ -1,4 +1,4 @@
-import '../../markup.dart';
+import 'package:markup_common/markup_common.dart';
 
 class MarkupException(
   final String message, {
@@ -8,7 +8,7 @@ class MarkupException(
   required final int start,
 }) implements Exception {
   factory fromSection(
-    MarkupSection section,
+    MarkdownSection section,
     String message, {
     Object? cause,
     StackTrace? stackTrace,

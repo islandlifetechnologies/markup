@@ -6,6 +6,8 @@
 
 ## Introduction
 
+Markup is a package to provide automated processing for Markdown files to be able to simplify the creation and maintenance of documentation.
+
 ## Syntax
 
 Like most markdown processors, markup uses comments to annotate the processing that neds to occur. The syntax allows for single tag directives as well as block based directives. However, each directive supports only one of the syntaxes and which one is documented in the directive itself.
@@ -74,7 +76,7 @@ The block tags start and end with markup comment. The content within the tags is
 
 **Example**
 
-[drawio.md](https://raw.githubusercontent.com/islandlifetechnologies/markup/refs/heads/main/test/assets/drawio.md)
+[drawio.md](https://raw.githubusercontent.com/islandlifetechnologies/markup/refs/heads/main/packages/markup/test/assets/drawio.md)
 
 **Parameters**
 
@@ -90,7 +92,7 @@ The block tags start and end with markup comment. The content within the tags is
 
 **Example**
 
-[file.md](https://raw.githubusercontent.com/islandlifetechnologies/markup/refs/heads/main/test/assets/file.md)
+[file.md](https://raw.githubusercontent.com/islandlifetechnologies/markup/refs/heads/main/packages/markup/test/assets/file.md)
 
 **Parameters**
 
@@ -102,7 +104,7 @@ The block tags start and end with markup comment. The content within the tags is
 
 **Example**
 
-[full_processing.md](https://raw.githubusercontent.com/islandlifetechnologies/markup/refs/heads/main/test/assets/full_processing.md)
+[full_processing.md](https://raw.githubusercontent.com/islandlifetechnologies/markup/refs/heads/main/packages/markup/test/assets/full_processing.md)
 
 **Parameters**
 
@@ -122,7 +124,7 @@ _n/a_
 
 **Example**
 
-[process.md](https://raw.githubusercontent.com/islandlifetechnologies/markup/refs/heads/main/test/assets/process.md)
+[process.md](https://raw.githubusercontent.com/islandlifetechnologies/markup/refs/heads/main/packages/markup/test/assets/process.md)
 
 **Parameters**
 
@@ -137,7 +139,7 @@ _n/a_
 
 **Example**
 
-[template.md](https://raw.githubusercontent.com/islandlifetechnologies/markup/refs/heads/main/test/assets/template.md)
+[template.md](https://raw.githubusercontent.com/islandlifetechnologies/markup/refs/heads/main/packages/markup/test/assets/template.md)
 
 **Parameters**
 
@@ -152,7 +154,7 @@ _n/a_
 
 **Example**
 
-[toc.md](https://raw.githubusercontent.com/islandlifetechnologies/markup/refs/heads/main/test/assets/toc.md)
+[toc.md](https://raw.githubusercontent.com/islandlifetechnologies/markup/refs/heads/main/packages/markup/test/assets/toc.md)
 
 **Parameters**
 

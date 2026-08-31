@@ -1,19 +1,12 @@
-import 'package:logging/logging.dart';
-
-import '../markup.dart';
+import 'package:markup_common/markup_common.dart';
 
 typedef ProcessorBuilder = MarkupProcessor Function(MarkupDirective section);
 
 class MarkupRegistry({Map<String, ProcessorBuilder>? builders}) {
   this {
-    _builders.addAll({
-      DrawIoProcessor.kType: DrawIoProcessor.new,
-      FileProcessor.kType: FileProcessor.new,
-      ProcessProcessor.kType: ProcessProcessor.new,
-      TemplateProcessor.kType: TemplateProcessor.new,
-      TocProcessor.kType: TocProcessor.new,
-      ...?builders,
-    });
+    if (builders != null) {
+      _builders.addAll(builders);
+    }
   }
 
   final Map<String, ProcessorBuilder> _builders = {};

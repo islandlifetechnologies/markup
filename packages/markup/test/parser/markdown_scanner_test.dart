@@ -1,8 +1,6 @@
 import 'dart:io';
 
-import 'package:markup/src/parser/markdown_content.dart';
-import 'package:markup/src/parser/markdown_scanner.dart';
-import 'package:markup/src/parser/markup_directive.dart';
+import 'package:markup/markup.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -12,7 +10,7 @@ void main() {
 
     final doc = scanner.scan();
 
-    expect(doc.length, 9);
+    expect(doc.length, 13);
 
     expect(doc[0], isA<MarkdownContent>());
     expect(doc[1], isA<MarkupDirective>());
@@ -49,5 +47,23 @@ void main() {
     );
     expect((doc[7] as MarkupDirective).params, {'bullet': '*'});
     expect(doc[8], isA<MarkdownContent>());
+    expect(doc[9], isA<MarkupIgnore>());
+    expect((doc[9] as MarkupIgnore).contents, '''
+<!-- markup:ignore -->
+
+## Repeat
+
+<!-- /markup:ignore -->
+''');
+    expect(doc[10], isA<MarkdownContent>());
+    expect(doc[11], isA<MarkupOutput>());
+    expect((doc[11] as MarkupOutput).contents, '''
+<!-- markup:output -->
+
+### Repeat
+
+<!-- /markup:output -->
+''');
+    expect(doc[12], isA<MarkdownContent>());
   });
 }

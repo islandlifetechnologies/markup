@@ -2,10 +2,8 @@
 
 import 'dart:io';
 
-import 'package:args/args.dart';
 import 'package:glob/glob.dart';
 import 'package:glob/list_local_fs.dart';
-import 'package:logging/logging.dart';
 import 'package:markup/markup.dart';
 import 'package:markup/src/constant/pubspec.dart';
 import 'package:path/path.dart' as p;
@@ -106,7 +104,7 @@ void main(List<String> args) async {
     );
     final doc = scanner.scan();
 
-    final result = await doc.process();
+    final result = await doc.process(DefaultMarkupRegistry());
 
     final outFile = File(p.join(doc.outPath, p.basename(file.path)));
     logger.info('Writing: ${outFile.path}');
