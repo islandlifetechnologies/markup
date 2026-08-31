@@ -22,55 +22,26 @@ void main(List<String> args) async {
   final logger = Logger('main');
   final cd = Directory('.');
 
-  final parser = ArgParser()
-    ..addOption(
-      'include',
-      abbr: 'i',
-      defaultsTo: '**/*.md',
-      help: 'The search glob to find the file or files to modify.',
-    )
-    ..addOption(
-      'log',
-      abbr: 'l',
-      allowed: Level.LEVELS.map((l) => l.name),
-      defaultsTo: Level.INFO.name,
-      help: 'Log level to use.',
-    )
-    ..addOption(
-      'output',
-      abbr: 'o',
-      help: "If set, all results will be written to this path and it's sub paths.",
-    )
-    ..addFlag(
-      'dry-run',
-      help: 'Perform a dry run, print all the logs, but do not write any Markdown files.',
-      negatable: false,
-    )
-    ..addFlag('help', help: 'Display this message', negatable: false)
-    ..addFlag('version', help: 'Display version information', negatable: false);
+  final (config, parser) = MarkupConfiguration.create(args);
 
-  final parsed = parser.parse(args);
-  final level =
-      Level.LEVELS.where((l) => l.name == parsed['log']).firstOrNull ??
-      Level.INFO;
-  Logger.root.level = level;
-
-  final (help, version) = (parsed['help'] == true, parsed['version'] == true);
-  if (help || version) {
+  if (config.help || config.version) {
     print('markup ${kPubspec.version}');
-    if (help) {
+    if (config.help) {
       print('');
       print(parser.usage);
     }
     exit(0);
   }
-  final dryRun = parsed['dry-run'] == true;
 
-  final output = parsed['output'] as String?;
+  final level =
+      Level.LEVELS.where((l) => l.name == config.log).firstOrNull ?? Level.INFO;
+  Logger.root.level = level;
+
+  final output = config.output;
   Directory? outDir;
   if (output != null) {
     outDir = Directory(output);
-    if (!dryRun) {
+    if (!config.dryRun) {
       if (outDir.existsSync()) {
         outDir.deleteSync(recursive: true);
       }
@@ -78,7 +49,7 @@ void main(List<String> args) async {
     }
   }
 
-  final include = Glob(parsed['include'] as String, recursive: true);
+  final include = Glob(config.include, recursive: true);
 
   for (final file in include.listSync().whereType<File>().where((f) {
     // Ignore all hidden files
@@ -108,7 +79,7 @@ void main(List<String> args) async {
 
     final outFile = File(p.join(doc.outPath, p.basename(file.path)));
     logger.info('Writing: ${outFile.path}');
-    if (!dryRun) {
+    if (!config.dryRun) {
       if (!outFile.existsSync()) {
         outFile.createSync(recursive: true);
       }
