@@ -6,7 +6,7 @@ part 'markup_directive.g.dart';
 /// syntax directives.
 @JsonSerializable()
 class MarkupDirective(
-  super.contents, {
+  super.content, {
   required super.end,
   Map<String, dynamic>? params,
   required super.start,
@@ -17,7 +17,7 @@ class MarkupDirective(
         r'<!--\s*markup:(?<key>[^\s]*)(?<params>.*)?\s*/-->',
         dotAll: true,
       );
-      final match = regEx.firstMatch(contents)!;
+      final match = regEx.firstMatch(content)!;
 
       final key = match.namedGroup('key')!.trim();
       final paramStr = match.namedGroup('params')?.trim();

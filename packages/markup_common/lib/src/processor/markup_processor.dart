@@ -16,6 +16,12 @@ abstract class MarkupProcessor(
   /// of other processors.
   final bool postProcessor = false,
 
+  /// Defines if the processor should replace the source content with the output
+  /// of the process.  When false, the output of the processor will be appended
+  /// to the content and when true, the output of the processor will replace the
+  /// content.
+  final bool replace = false,
+
   required String type,
 }) {
   this {

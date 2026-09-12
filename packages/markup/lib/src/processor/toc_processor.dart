@@ -1,5 +1,4 @@
-
-import '../../markup.dart';
+import 'package:markup/markup.dart';
 
 part 'toc_processor.g.dart';
 
@@ -15,7 +14,6 @@ class TocProcessor(
   static const kType = 'toc';
 
   static const _maxLevel = 6;
-  static final _fenceRegEx = RegExp(r'^(?<fence>```+)(?<name>\S*)?');
   static final _linkRegEx = RegExp(r'(?<title>\[.*\])(?<link>\(.*\))?');
   static final _titleRegEx = RegExp(r'^(?<level>#+)(?<title>\s+(.*))$');
 
@@ -33,12 +31,12 @@ class TocProcessor(
     var depth = 1;
     for (var i = 0; i < lines.length; i++) {
       final line = lines[i];
-      final codeMatch = _fenceRegEx.firstMatch(line.trim());
+      final codeMatch = MarkupFence.fenceRegEx.firstMatch(line.trim());
       if (codeMatch != null) {
         final fence = codeMatch.namedGroup('fence')!;
         for (var j = i + 1; j < lines.length; j++) {
           final l = lines[j].trim();
-          final endMatch = _fenceRegEx.firstMatch(l);
+          final endMatch = MarkupFence.fenceRegEx.firstMatch(l);
           if (endMatch != null && fence == endMatch.namedGroup('fence')) {
             i = j;
             break;

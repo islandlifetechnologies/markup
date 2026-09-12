@@ -1,6 +1,7 @@
-import 'dart:io';
-
+import 'package:file/file.dart';
+import 'package:file/local.dart';
 import 'package:markup_common/markup_common.dart';
+import 'package:meta/meta.dart';
 
 part 'markup_configuration.g.dart';
 
@@ -17,7 +18,11 @@ class MarkupConfiguration({
   factory fromJson(Map<String, dynamic> json) =>
       _$MarkupConfigurationFromJson(json);
 
-  static (MarkupConfiguration, ArgParser) create(List<String> args) {
+  static (MarkupConfiguration, ArgParser) create(
+    List<String> args, {
+    @visibleForTesting FileSystem? fs,
+  }) {
+    fs ??= LocalFileSystem();
     final parser = ArgParser()
       ..addOption(
         'config',
@@ -65,7 +70,7 @@ class MarkupConfiguration({
     }..removeWhere((key, value) => value == null);
 
     if (configPath != null) {
-      final file = File(configPath);
+      final file = fs.file(configPath);
       if (!file.existsSync()) {
         throw Exception(
           'Unable to locate configuration file: ${file.absolute.path}',
@@ -88,8 +93,10 @@ class MarkupConfiguration({
 class MarkupPluginData({
   final List<String> args = const [],
   required final String command,
+  @JsonKey(name: 'ignore-exit-code') final bool ignoreExitCode = false,
   @JsonKey(name: 'post-processor') final bool postProcessor = false,
-  @JsonKey(name: 'working-direction') final String? workingDirectory,
+  @JsonKey(name: 'replace') final bool replace = false,
+  @JsonKey(name: 'working-directory') final String? workingDirectory,
 }) {
   factory fromJson(Map<String, dynamic> json) =>
       _$MarkupPluginDataFromJson(json);

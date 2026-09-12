@@ -39,6 +39,12 @@ class MarkdownDocument(
           final output = await processor.process(this);
           result.add(output);
         }
+      } else if (section is MarkupFence) {
+        final processor = registry.maybeCreate(section);
+        if (processor != null && !processor.postProcessor) {
+          final output = await processor.process(this);
+          result.add(output);
+        }
       }
     }
 
@@ -60,5 +66,6 @@ class MarkdownDocument(
   @override
   String toString({bool ignoreOutput = false}) =>
       (ignoreOutput ? _sections.where((s) => s is! MarkupOutput) : _sections)
-          .join('');
+          .map((s) => s.toString().trimRight())
+          .join('\n');
 }

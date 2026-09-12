@@ -16,7 +16,7 @@ void main() {
     expect(directive.params['working-directory'], r'${PWD}');
 
     final result = ProcessProcessor(directive).process(doc);
-    expect(result.contents, '''
+    expect(result.content, '''
 <!-- markup:output -->
 markup ${kPubspec.version}
 
@@ -40,7 +40,7 @@ markup ${kPubspec.version}
     expect(directive.params['working-directory'], r'../../');
 
     final result = ProcessProcessor(directive).process(doc);
-    expect(result.contents, '''
+    expect(result.content, '''
 <!-- markup:output -->
 markup ${kPubspec.version}
 <!-- /markup:output -->

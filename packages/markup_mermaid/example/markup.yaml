@@ -1,0 +1,8 @@
+input: test/mermaid.md
+output: output
+plugins:
+  mermaid:
+    ignore-exit-code: false # Default: false
+    post-processor: false   # Default: false
+    replace: true
+    working-directory: .    # Default: .

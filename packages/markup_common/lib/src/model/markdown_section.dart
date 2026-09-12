@@ -2,7 +2,7 @@ import 'package:markup_common/markup_common.dart';
 
 /// Abstract class for separating content within a Markdown document.
 abstract class MarkdownSection(
-  final String contents, {
+  final String content, {
 
   /// The line number of the end of the section in the original document.
   required final int end,
@@ -26,5 +26,5 @@ abstract class MarkdownSection(
   /// Returns the contents of the section that can be embedded into a Markdown
   /// file.
   @override
-  String toString() => contents;
+  String toString() => content;
 }

@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:markup/markup.dart';
 
-part 'plugin_processor.g.dart';
-
 typedef PluginRunner = String Function({
   required List<String> args,
   required String command,
@@ -13,17 +11,13 @@ typedef PluginRunner = String Function({
   required Directory workingDirectory,
 });
 
-class PluginProcessor(
-  super.directive, {
-  final ProcessRunner runner = _defaultRunner,
-  super.type = kType,
+class MarkupPluginProcessor(
+  super.section, {
+  required final MarkupPluginData plugin,
+  final PluginRunner runner = _defaultRunner,
+  required super.type,
 }) extends MarkupProcessor {
-  this {
-    _params = _Params.fromJson((section as MarkupDirective).params);
-  }
-  static const kType = 'plugin';
-
-  late final _Params _params;
+  this : super(postProcessor: plugin.postProcessor, replace: plugin.replace);
 
   static String _defaultRunner({
     required List<String> args,
@@ -65,7 +59,7 @@ class PluginProcessor(
 
   @override
   MarkupOutput process(MarkdownDocument doc) {
-    final wd = getEntity<Directory>(doc, _params.workingDirectory);
+    final wd = getEntity<Directory>(doc, plugin.workingDirectory ?? '.');
     if (!wd.existsSync()) {
       throw MarkupException.fromSection(
         section,
@@ -73,9 +67,9 @@ class PluginProcessor(
       );
     }
     final output = _defaultRunner(
-      args: _params.args,
-      command: _params.command,
-      ignoreExitCode: _params.ignoreExitCode,
+      args: plugin.args,
+      command: plugin.command,
+      ignoreExitCode: plugin.ignoreExitCode,
       logger: logger,
       section: section,
       workingDirectory: wd,
@@ -83,14 +77,4 @@ class PluginProcessor(
 
     return MarkupOutput.fromSection(output, section: section);
   }
-}
-
-@JsonSerializable()
-class _Params({
-  final List<String> args = const [],
-  required final String command,
-  @JsonKey(name: 'ignore-exit-code') final bool ignoreExitCode = false,
-  @JsonKey(name: 'working-directory') final String workingDirectory = '.',
-}) {
-  factory fromJson(Map<String, dynamic> json) => _$ParamsFromJson(json);
 }

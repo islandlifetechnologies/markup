@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import '../../markup.dart';
+import 'package:markup/markup.dart';
 
 class MarkdownScanner(
   final String input, {
@@ -45,12 +45,19 @@ class MarkdownScanner(
     for (final line in scanner) {
       startNum ??= scanner.offset;
 
-      final markupBlockMatch = markupBlockRegEx.firstMatch(line);
-      final markupMatch = markupBlockMatch != null
+      final fenceBlock = MarkupFence.fenceRegEx.firstMatch(line.trim());
+      final markupBlockMatch = fenceBlock != null
+          ? null
+          : markupBlockRegEx.firstMatch(line);
+      final markupMatch = fenceBlock != null || markupBlockMatch != null
           ? null
           : markupRegEx.firstMatch(line);
 
-      if (markupBlockMatch != null) {
+      if (fenceBlock != null) {
+        stashBuffer();
+        final fence = fenceBlock.namedGroup('fence')!;
+        sections.add(_readMarkupFence(scanner, fence));
+      } else if (markupBlockMatch != null) {
         stashBuffer();
         final key = markupBlockMatch.namedGroup('key')!;
         sections.add(_readMarkupBlock(scanner, key));
@@ -124,10 +131,23 @@ class MarkdownScanner(
       }
     }
 
-    return MarkupDirective(
-      buf.toString(),
-      end: scanner.offset,
-      start: startNum,
-    );
+    return MarkupDirective('$buf\n', end: scanner.offset, start: startNum);
+  }
+
+  MarkupSection _readMarkupFence(StringScanner scanner, String fence) {
+    final startLine = scanner.iterator.current;
+    final startNum = scanner.offset;
+    final buf = StringBuffer();
+    buf.writeln(startLine);
+
+    for (final line in scanner) {
+      buf.writeln(line);
+
+      final match = MarkupFence.fenceRegEx.firstMatch(line.trim());
+      if (match?.namedGroup('fence')?.length == fence.length) {
+        break;
+      }
+    }
+    return MarkupFence(buf.toString(), end: scanner.offset, start: startNum);
   }
 }

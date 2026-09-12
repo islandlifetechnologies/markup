@@ -11,21 +11,21 @@ void main() {
     final directive = doc[1] as MarkupDirective;
 
     final result = TocProcessor(directive).process(doc);
-    expect(result.contents, _table('-'));
+    expect(result.content, _table('-'));
   });
 
   test('plus', () async {
     final directive = doc[3] as MarkupDirective;
 
     final result = TocProcessor(directive).process(doc);
-    expect(result.contents, _table('+'));
+    expect(result.content, _table('+'));
   });
 
   test('star', () async {
     final directive = doc[5] as MarkupDirective;
 
     final result = TocProcessor(directive).process(doc);
-    expect(result.contents, _table('*'));
+    expect(result.content, _table('*'));
   });
 }
 

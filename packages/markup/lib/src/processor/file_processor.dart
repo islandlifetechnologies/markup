@@ -1,7 +1,6 @@
 import 'dart:io';
 
-
-import '../../markup.dart';
+import 'package:markup/markup.dart';
 
 part 'file_processor.g.dart';
 

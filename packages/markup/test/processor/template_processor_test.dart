@@ -17,7 +17,7 @@ void main() {
     );
 
     final result = TemplateProcessor(directive).process(doc);
-    expect(result.contents, '''
+    expect(result.content, '''
 <!-- markup:output -->
 The answer to life is: 42
 <!-- /markup:output -->
@@ -32,7 +32,7 @@ The answer to life is: 42
     });
 
     final result = TemplateProcessor(directive).process(doc);
-    expect(result.contents, '''
+    expect(result.content, '''
 <!-- markup:output -->
 ```yaml
 dependencies:

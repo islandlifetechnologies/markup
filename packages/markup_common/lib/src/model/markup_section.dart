@@ -3,7 +3,7 @@ import 'markdown_section.dart';
 /// An abstract section that is known to the markup platform for special
 /// handling.
 abstract class MarkupSection(
-  super.contents, {
+  super.content, {
   required super.end,
   required super.start,
 }) extends MarkdownSection {

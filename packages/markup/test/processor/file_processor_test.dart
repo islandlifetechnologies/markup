@@ -13,7 +13,7 @@ void main() {
     expect(directive.params['file'], '../../LICENSE');
 
     final result = FileProcessor(directive).process(doc);
-    expect(result.contents, '''
+    expect(result.content, '''
 <!-- markup:output -->
 MIT License
 
@@ -46,7 +46,7 @@ SOFTWARE.
     expect(directive.params['file'], r'${PWD}/LICENSE');
 
     final result = FileProcessor(directive).process(doc);
-    expect(result.contents, '''
+    expect(result.content, '''
 <!-- markup:output -->
 MIT License
 

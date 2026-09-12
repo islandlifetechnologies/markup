@@ -1,6 +1,6 @@
 import 'package:markup_common/markup_common.dart';
 
-typedef ProcessorBuilder = MarkupProcessor Function(MarkupDirective section);
+typedef ProcessorBuilder = MarkupProcessor Function(MarkupSection section);
 
 class MarkupRegistry({Map<String, ProcessorBuilder>? builders}) {
   this {
@@ -14,7 +14,7 @@ class MarkupRegistry({Map<String, ProcessorBuilder>? builders}) {
   final _logger = Logger('MarkupRegistry');
 
   /// Creates a processor for the given directive.
-  MarkupProcessor create(MarkupDirective section) {
+  MarkupProcessor create(MarkupSection section) {
     _logger.config('Create builder: ${section.type}');
     final builder = _builders[section.type];
 
@@ -27,11 +27,11 @@ class MarkupRegistry({Map<String, ProcessorBuilder>? builders}) {
     return builder(section);
   }
 
-  MarkupProcessor? maybeCreate(MarkupDirective directive) {
-    _logger.config('Maybe builder: ${directive.type}');
-    final builder = _builders[directive.type];
+  MarkupProcessor? maybeCreate(MarkupSection section) {
+    _logger.config('Maybe builder: ${section.type}');
+    final builder = _builders[section.type];
 
-    return builder?.call(directive);
+    return builder?.call(section);
   }
 
   void registerBuilder(String type, ProcessorBuilder builder) {

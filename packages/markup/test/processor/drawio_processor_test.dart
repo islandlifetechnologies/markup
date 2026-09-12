@@ -14,7 +14,7 @@ void main() {
     expect(directive.params['mode'], 'svg');
 
     final result = DrawIoProcessor(directive).process(doc);
-    expect(result.contents, '''
+    expect(result.content, '''
 <!-- markup:output -->
 ![drawio/infographic-1.svg](drawio/infographic-1.svg)
 <!-- /markup:output -->
@@ -33,7 +33,7 @@ void main() {
     expect(directive.params['mode'], 'png');
 
     final result = DrawIoProcessor(directive).process(doc);
-    expect(result.contents, '''
+    expect(result.content, '''
 <!-- markup:output -->
 ![Why Agile Swirly Thing](drawio/infographic-2.png)
 <!-- /markup:output -->

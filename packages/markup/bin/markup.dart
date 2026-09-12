@@ -9,17 +9,7 @@ import 'package:markup/src/constant/pubspec.dart';
 import 'package:path/path.dart' as p;
 
 void main(List<String> args) async {
-  Logger.root.onRecord.listen((record) {
-    print('${{record.time}}: ${record.level}: ${record.message}');
-
-    final (e, stack) = (record.error, record.stackTrace);
-    for (final i in [e, stack]) {
-      if (i != null) {
-        print(i.toString());
-      }
-    }
-  });
-  final logger = Logger('main');
+  final logger = initLogging('main');
   final cd = Directory('.');
 
   final (config, parser) = MarkupConfiguration.create(args);
@@ -75,7 +65,16 @@ void main(List<String> args) async {
     );
     final doc = scanner.scan();
 
-    final result = await doc.process(DefaultMarkupRegistry());
+    final registry = DefaultMarkupRegistry();
+    for (final entry
+        in (config.plugins ?? const <String, MarkupPluginData>{}).entries) {
+      final plugin = entry.value;
+      logger.config('Registering plugin: ${entry.key})');
+      registry.registerBuilder(entry.key, (section) {
+        return MarkupPluginProcessor(section, plugin: plugin, type: entry.key);
+      });
+    }
+    final result = await doc.process(registry);
 
     final outFile = File(p.join(doc.outPath, p.basename(file.path)));
     logger.info('Writing: ${outFile.path}');
