@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' show Platform, Process;
 
 import 'package:markup/markup.dart';
 import 'package:meta/meta.dart';
@@ -9,6 +9,7 @@ part 'drawio_processor.g.dart';
 typedef DrawIoRunner = File Function({
   required String currentDirectory,
   required File file,
+  required FileSystem fs,
   required int index,
   required Logger logger,
   required DrawIoMode mode,
@@ -18,6 +19,7 @@ typedef DrawIoRunner = File Function({
 
 class DrawIoProcessor(
   super.section, {
+  required super.registry,
   super.type = kType,
   @visibleForTesting final DrawIoRunner _runner = _defaultDrawIoRunner,
 }) extends MarkupProcessor {
@@ -32,6 +34,7 @@ class DrawIoProcessor(
   static File _defaultDrawIoRunner({
     required String currentDirectory,
     required File file,
+    required FileSystem fs,
     required int index,
     required Logger logger,
     required DrawIoMode mode,
@@ -82,7 +85,7 @@ Exit code: ${process.exitCode}.
 ''');
     }
 
-    return File(outFile);
+    return fs.file(outFile);
   }
 
   @override
@@ -97,8 +100,9 @@ Exit code: ${process.exitCode}.
     }
 
     final outFile = _runner(
-      currentDirectory: Directory('.').absolute.path,
+      currentDirectory: registry.fs.directory('.').absolute.path,
       file: dioFile,
+      fs: registry.fs,
       index: _params.index,
       logger: logger,
       mode: _params.mode,

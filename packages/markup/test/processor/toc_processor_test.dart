@@ -1,30 +1,31 @@
-import 'dart:io';
-
 import 'package:markup/markup.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final scanner = MarkdownScanner.fromFile(File('test/assets/toc.md'));
+  final registry = DefaultMarkupRegistry();
+  final scanner = MarkdownScanner.fromFile(
+    registry.fs.file('test/assets/toc.md'),
+  );
   final doc = scanner.scan();
 
   test('no params', () async {
     final directive = doc[1] as MarkupDirective;
 
-    final result = TocProcessor(directive).process(doc);
+    final result = TocProcessor(directive, registry: registry).process(doc);
     expect(result.content, _table('-'));
   });
 
   test('plus', () async {
     final directive = doc[3] as MarkupDirective;
 
-    final result = TocProcessor(directive).process(doc);
+    final result = TocProcessor(directive, registry: registry).process(doc);
     expect(result.content, _table('+'));
   });
 
   test('star', () async {
     final directive = doc[5] as MarkupDirective;
 
-    final result = TocProcessor(directive).process(doc);
+    final result = TocProcessor(directive, registry: registry).process(doc);
     expect(result.content, _table('*'));
   });
 }

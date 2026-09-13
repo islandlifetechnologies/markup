@@ -1,11 +1,12 @@
-import 'dart:io';
-
 import 'package:markup/markup.dart';
 import 'package:markup/src/constant/pubspec.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final scanner = MarkdownScanner.fromFile(File('test/assets/process.md'));
+  final registry = DefaultMarkupRegistry();
+  final scanner = MarkdownScanner.fromFile(
+    registry.fs.file('test/assets/process.md'),
+  );
   final doc = scanner.scan();
 
   test('process:1', () async {
@@ -15,7 +16,10 @@ void main() {
     expect(directive.params['args'], ['bin/markup.dart', '--help']);
     expect(directive.params['working-directory'], r'${PWD}');
 
-    final result = ProcessProcessor(directive).process(doc);
+    final result = await ProcessProcessor(
+      directive,
+      registry: registry,
+    ).process(doc);
     expect(result.content, '''
 <!-- markup:output -->
 markup ${kPubspec.version}
@@ -39,7 +43,10 @@ markup ${kPubspec.version}
     expect(directive.params['args'], ['bin/markup.dart', '--version']);
     expect(directive.params['working-directory'], r'../../');
 
-    final result = ProcessProcessor(directive).process(doc);
+    final result = await ProcessProcessor(
+      directive,
+      registry: registry,
+    ).process(doc);
     expect(result.content, '''
 <!-- markup:output -->
 markup ${kPubspec.version}

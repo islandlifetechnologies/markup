@@ -1,10 +1,11 @@
-import 'dart:io';
-
 import 'package:markup/markup.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final scanner = MarkdownScanner.fromFile(File('test/assets/file.md'));
+  final registry = DefaultMarkupRegistry();
+  final scanner = MarkdownScanner.fromFile(
+    registry.fs.file('test/assets/file.md'),
+  );
   final doc = scanner.scan();
 
   test('file:0', () async {
@@ -12,7 +13,7 @@ void main() {
 
     expect(directive.params['file'], '../../LICENSE');
 
-    final result = FileProcessor(directive).process(doc);
+    final result = FileProcessor(directive, registry: registry).process(doc);
     expect(result.content, '''
 <!-- markup:output -->
 MIT License
@@ -45,7 +46,7 @@ SOFTWARE.
 
     expect(directive.params['file'], r'${PWD}/LICENSE');
 
-    final result = FileProcessor(directive).process(doc);
+    final result = FileProcessor(directive, registry: registry).process(doc);
     expect(result.content, '''
 <!-- markup:output -->
 MIT License

@@ -1,11 +1,12 @@
-import 'dart:io';
-
 import 'package:markup/markup.dart';
 import 'package:markup/src/constant/pubspec.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final scanner = MarkdownScanner.fromFile(File('test/assets/template.md'));
+  final registry = DefaultMarkupRegistry();
+  final scanner = MarkdownScanner.fromFile(
+    registry.fs.file('test/assets/template.md'),
+  );
   final doc = scanner.scan();
 
   test('template:0', () async {
@@ -16,7 +17,10 @@ void main() {
       r'The answer to life is: ${20 * 2 + 2}',
     );
 
-    final result = TemplateProcessor(directive).process(doc);
+    final result = TemplateProcessor(
+      directive,
+      registry: registry,
+    ).process(doc);
     expect(result.content, '''
 <!-- markup:output -->
 The answer to life is: 42
@@ -31,7 +35,10 @@ The answer to life is: 42
       'pubspec': r"${yaon.decode(File('pubspec.yaml').readAsStringSync())}",
     });
 
-    final result = TemplateProcessor(directive).process(doc);
+    final result = TemplateProcessor(
+      directive,
+      registry: registry,
+    ).process(doc);
     expect(result.content, '''
 <!-- markup:output -->
 ```yaml

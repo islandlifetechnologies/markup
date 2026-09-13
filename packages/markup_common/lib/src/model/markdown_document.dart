@@ -1,32 +1,30 @@
-import 'dart:collection';
-
 import 'package:markup_common/markup_common.dart';
 
+part 'markdown_document.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class MarkdownDocument(
-  final List<MarkdownSection> _sections, {
+  List<MarkdownSection> sections, {
   required final String outPath,
   required final String path,
-}) extends ListBase<MarkdownSection> {
+}) {
+  this : _sections = sections;
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$MarkdownDocumentFromJson(json);
+
+  final List<MarkdownSection> _sections;
+
   void insertAfter(MarkdownSection toLocate, MarkdownSection toInsert) {
     final index = _sections.indexOf(toLocate);
     _sections.insert(index + 1, toInsert);
   }
 
-  @override
   MarkdownSection operator [](int index) => _sections[index];
 
-  @override
-  void operator []=(int index, MarkdownSection value) =>
-      _sections[index] = value;
-
-  @override
   int get length => _sections.length;
 
   List<MarkdownSection> get sections => List.from(_sections);
-
-  @override
-  set length(int newLength) =>
-      throw Exception('Cannot change the length of MarkdownDocument');
 
   Future<MarkdownDocument> process(MarkupRegistry registry) async {
     final result = <MarkdownSection>[];
@@ -62,6 +60,8 @@ class MarkdownDocument(
 
     return doc;
   }
+
+  Map<String, dynamic> toJson() => _$MarkdownDocumentToJson(this);
 
   @override
   String toString({bool ignoreOutput = false}) =>

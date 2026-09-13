@@ -1,9 +1,16 @@
+import 'package:file/local.dart';
 import 'package:markup_common/markup_common.dart';
 
-typedef ProcessorBuilder = MarkupProcessor Function(MarkupSection section);
+typedef ProcessorBuilder = MarkupProcessor Function(
+  MarkupSection section, {
+  required MarkupRegistry registry,
+});
 
-class MarkupRegistry({Map<String, ProcessorBuilder>? builders}) {
-  this {
+class MarkupRegistry({
+  Map<String, ProcessorBuilder>? builders,
+  FileSystem? fs,
+}) {
+  this : fs = fs ?? LocalFileSystem() {
     if (builders != null) {
       _builders.addAll(builders);
     }
@@ -11,6 +18,7 @@ class MarkupRegistry({Map<String, ProcessorBuilder>? builders}) {
 
   final Map<String, ProcessorBuilder> _builders = {};
 
+  final FileSystem fs;
   final _logger = Logger('MarkupRegistry');
 
   /// Creates a processor for the given directive.
@@ -24,14 +32,14 @@ class MarkupRegistry({Map<String, ProcessorBuilder>? builders}) {
       );
     }
 
-    return builder(section);
+    return builder(section, registry: this);
   }
 
   MarkupProcessor? maybeCreate(MarkupSection section) {
     _logger.config('Maybe builder: ${section.type}');
     final builder = _builders[section.type];
 
-    return builder?.call(section);
+    return builder?.call(section, registry: this);
   }
 
   void registerBuilder(String type, ProcessorBuilder builder) {

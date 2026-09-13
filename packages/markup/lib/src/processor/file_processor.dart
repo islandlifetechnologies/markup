@@ -1,11 +1,12 @@
-import 'dart:io';
-
 import 'package:markup/markup.dart';
 
 part 'file_processor.g.dart';
 
-class FileProcessor(super.section, {super.type = kType})
-    extends MarkupProcessor {
+class FileProcessor(
+  super.section, {
+  required super.registry,
+  super.type = kType,
+}) extends MarkupProcessor {
   this {
     _params = _Params.fromJson((section as MarkupDirective).params);
   }

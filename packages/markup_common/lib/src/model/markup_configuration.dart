@@ -1,4 +1,3 @@
-import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:markup_common/markup_common.dart';
 import 'package:meta/meta.dart';
@@ -79,7 +78,9 @@ class MarkupConfiguration({
       final c = yaon.parse(file.readAsStringSync()) as Map<String, dynamic>;
 
       for (final entry in c.entries) {
-        config.putIfAbsent(entry.key, entry.value);
+        if (!config.containsKey(entry.key)) {
+          config[entry.key] = entry.value;
+        }
       }
     }
 
@@ -96,6 +97,8 @@ class MarkupPluginData({
   @JsonKey(name: 'ignore-exit-code') final bool ignoreExitCode = false,
   @JsonKey(name: 'post-processor') final bool postProcessor = false,
   @JsonKey(name: 'replace') final bool replace = false,
+  @JsonKey(name: 'timeout', fromJson: JsonClass.parseDurationFromSeconds)
+  final Duration timeout = const Duration(minutes: 1),
   @JsonKey(name: 'working-directory') final String? workingDirectory,
 }) {
   factory fromJson(Map<String, dynamic> json) =>

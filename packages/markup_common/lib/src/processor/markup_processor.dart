@@ -16,6 +16,8 @@ abstract class MarkupProcessor(
   /// of other processors.
   final bool postProcessor = false,
 
+  required final MarkupRegistry registry,
+
   /// Defines if the processor should replace the source content with the output
   /// of the process.  When false, the output of the processor will be appended
   /// to the content and when true, the output of the processor will replace the
@@ -45,17 +47,17 @@ abstract class MarkupProcessor(
   }
 
   F getEntity<F extends FileSystemEntity>(MarkdownDocument doc, String path) {
-    final cd = Directory(p.dirname(doc.path));
+    final cd = registry.fs.directory(p.dirname(doc.path));
 
     final builder = switch (F) {
-      Directory => Directory.new,
-      File => File.new,
+      Directory => registry.fs.directory,
+      File => registry.fs.file,
       _ => throw Exception('Unknown entity type: $F'),
     };
 
     path = Template(
       path,
-      context: {'PWD': Directory('.').absolute.path},
+      context: {'PWD': registry.fs.directory('.').absolute.path},
     ).process();
 
     final entity = _isAbsolute(path)

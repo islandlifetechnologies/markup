@@ -7,4 +7,3 @@ workspace:
   - packages/markup
   - packages/markup_common
   - packages/markup_mermaid
-  - packages/markup_plugin

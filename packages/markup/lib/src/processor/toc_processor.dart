@@ -5,6 +5,7 @@ part 'toc_processor.g.dart';
 class TocProcessor(
   super.section, {
   super.postProcessor = true,
+  required super.registry,
   super.type = kType,
 }) extends MarkupProcessor {
   this {
@@ -22,7 +23,7 @@ class TocProcessor(
   @override
   MarkupOutput process(MarkdownDocument doc) {
     final lines = _removeComments(
-      doc.sections.skip(doc.indexOf(section)).join('\n'),
+      doc.sections.skip(doc.sections.indexOf(section)).join('\n'),
     ).split('\n');
     final toc = <_TocEntry>[];
 

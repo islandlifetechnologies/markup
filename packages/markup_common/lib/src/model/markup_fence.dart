@@ -1,7 +1,16 @@
 import 'package:markup_common/markup_common.dart';
 
-class MarkupFence(super.content, {required super.end, required super.start})
-    extends MarkupSection {
+part 'markup_fence.g.dart';
+
+const _kSectionType = 'MarkupFence';
+
+@JsonSerializable()
+class MarkupFence(
+  super.content, {
+  required super.end,
+  super.sectionType = _kSectionType,
+  required super.start,
+}) extends MarkupSection {
   this {
     final match = fenceRegEx.firstMatch(content);
     if (match == null) {
@@ -16,6 +25,9 @@ class MarkupFence(super.content, {required super.end, required super.start})
     _type = match.namedGroup('type') ?? '';
   }
 
+  factory fromJson(Map<String, dynamic> json) => _$MarkupFenceFromJson(json);
+
+  static const kSectionType = _kSectionType;
   static final fenceRegEx = RegExp(
     r'^(?<indent>\s*)(?<fence>```+)(?<type>\S*)?\s*(?<params>.*)',
   );
@@ -26,7 +38,11 @@ class MarkupFence(super.content, {required super.end, required super.start})
 
   int get indent => _indent;
 
+  @override
   Map<String, dynamic> get params => _params;
+
+  @override
+  Map<String, dynamic> toJson() => _$MarkupFenceToJson(this);
 
   @override
   String get type => _type;

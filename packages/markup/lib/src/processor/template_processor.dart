@@ -1,11 +1,12 @@
-import 'dart:io';
-
 import 'package:markup/markup.dart';
 
 part 'template_processor.g.dart';
 
-class TemplateProcessor(super.directive, {super.type = kType})
-    extends MarkupProcessor {
+class TemplateProcessor(
+  super.directive, {
+  required super.registry,
+  super.type = kType,
+}) extends MarkupProcessor {
   this {
     _params = _Params.fromJson((section as MarkupDirective).params);
   }

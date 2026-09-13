@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:markup/markup.dart';
 import 'package:test/test.dart';
 
 void main() {
+  final registry = DefaultMarkupRegistry();
   test('simple', () {
-    final markdown = File('test/assets/toc.md').readAsStringSync();
+    final markdown = registry.fs.file('test/assets/toc.md').readAsStringSync();
     final scanner = MarkdownScanner(markdown);
 
     final doc = scanner.scan();
@@ -70,7 +69,9 @@ void main() {
   });
 
   test('fence', () {
-    final markdown = File('test/assets/fence.md').readAsStringSync();
+    final markdown = registry.fs
+        .file('test/assets/fence.md')
+        .readAsStringSync();
     final scanner = MarkdownScanner(markdown);
 
     final doc = scanner.scan();

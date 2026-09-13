@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:markup/markup.dart';
 
 class MarkdownScanner(
@@ -27,24 +25,18 @@ class MarkdownScanner(
     final sections = <MarkdownSection>[];
 
     var buf = StringBuffer();
-    int? startNum;
 
-    void stashBuffer() {
+    void stashBuffer(int startNum) {
       if (buf.isNotEmpty) {
         sections.add(
-          MarkdownContent(
-            buf.toString(),
-            end: scanner.offset,
-            start: startNum!,
-          ),
+          MarkdownContent(buf.toString(), end: scanner.offset, start: startNum),
         );
         buf = StringBuffer();
       }
     }
 
+    var startNum = 0;
     for (final line in scanner) {
-      startNum ??= scanner.offset;
-
       final fenceBlock = MarkupFence.fenceRegEx.firstMatch(line.trim());
       final markupBlockMatch = fenceBlock != null
           ? null
@@ -54,15 +46,18 @@ class MarkdownScanner(
           : markupRegEx.firstMatch(line);
 
       if (fenceBlock != null) {
-        stashBuffer();
+        stashBuffer(startNum);
+        startNum = scanner.offset;
         final fence = fenceBlock.namedGroup('fence')!;
         sections.add(_readMarkupFence(scanner, fence));
       } else if (markupBlockMatch != null) {
-        stashBuffer();
+        stashBuffer(startNum);
+        startNum = scanner.offset;
         final key = markupBlockMatch.namedGroup('key')!;
         sections.add(_readMarkupBlock(scanner, key));
       } else if (markupMatch != null) {
-        stashBuffer();
+        stashBuffer(startNum);
+        startNum = scanner.offset;
         sections.add(_readMarkupDirective(scanner));
       } else {
         buf.writeln(line);
@@ -71,11 +66,7 @@ class MarkdownScanner(
 
     if (buf.isNotEmpty) {
       sections.add(
-        MarkdownContent(
-          buf.toString(),
-          end: scanner.offset,
-          start: startNum ?? 0,
-        ),
+        MarkdownContent(buf.toString(), end: scanner.offset, start: startNum),
       );
     }
 

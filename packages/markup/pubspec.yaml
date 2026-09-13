@@ -1,7 +1,7 @@
 name: 'markup'
 description: 'Automated processing for Markdown files to simplify documentation creation and maintenance.'
 homepage: https://github.com/islandlifetechnologies/markup/tree/main/packages/markup
-version: 1.0.0-alpha0
+version: 1.0.0
 
 resolution: workspace
 

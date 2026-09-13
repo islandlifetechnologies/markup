@@ -1,96 +1,100 @@
-import 'dart:io';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io' show Process;
 
 import 'package:markup/markup.dart';
 
-part 'plugin_processor.g.dart';
-
-typedef PluginRunner = String Function({
-  required List<String> args,
-  required String command,
-  required bool ignoreExitCode,
+typedef PluginRunner = Future<String> Function({
+  required MarkdownDocument doc,
   required Logger logger,
+  required MarkupPluginData plugin,
   required MarkupSection section,
-  required Directory workingDirectory,
 });
 
 class PluginProcessor(
   super.directive, {
-  final ProcessRunner runner = _defaultRunner,
+  required final MarkupPluginData plugin,
+  required super.registry,
+  final PluginRunner runner = _defaultRunner,
   super.type = kType,
 }) extends MarkupProcessor {
-  this {
-    _params = _Params.fromJson((section as MarkupDirective).params);
-  }
+  this : super(postProcessor: plugin.postProcessor, replace: plugin.replace);
+
   static const kType = 'plugin';
 
-  late final _Params _params;
-
-  static String _defaultRunner({
-    required List<String> args,
-    required String command,
-    required bool ignoreExitCode,
+  static Future<String> _defaultRunner({
+    required MarkdownDocument doc,
     required Logger logger,
+    required MarkupPluginData plugin,
     required MarkupSection section,
-    required Directory workingDirectory,
-  }) {
-    final cl = [command, ...(args.map((a) => '"$a"'))].join(' ');
+  }) async {
+    final cl = [plugin.command, ...(plugin.args.map((a) => '"$a"'))].join(' ');
     logger.finer('Executing: $cl');
-    final process = Process.runSync(
-      command,
-      args,
-      workingDirectory: workingDirectory.absolute.path,
+    final process = await Process.start(
+      plugin.command,
+      plugin.args,
+      runInShell: true,
+      workingDirectory: plugin.workingDirectory ?? '.',
     );
+    try {
+      final input = MarkupPluginInput(doc: doc, section: section);
 
-    if (logger.isLoggable(Level.FINEST)) {
-      for (final (name, io) in [
-        ('stdio', process.stdout?.toString()),
-        ('stderr', process.stderr?.toString()),
-      ]) {
-        if (io != null) {
-          logger.finest('$name\n$io');
+      final inData = json.encode(input.toJson());
+
+      logger.finest('Passing input to plugin: ${plugin.command}\n$inData');
+      process.stdin.write(inData);
+      await process.stdin.flush();
+      await process.stdin.close();
+
+      final completer = Completer<int>();
+
+      Future.delayed(plugin.timeout, () {
+        if (!completer.isCompleted) {
+          completer.completeError('Timeout!');
         }
-      }
-    }
+      });
 
-    if (process.exitCode != 0 && !ignoreExitCode) {
+      process.exitCode.then((c) {
+        if (!completer.isCompleted) {
+          completer.complete(c);
+        }
+      });
+
+      logger.info('Waiting plugin: ${plugin.command}');
+      final exitCode = await completer.future;
+
+      if (exitCode != 0 && !plugin.ignoreExitCode) {
+        throw MarkupException.fromSection(
+          section,
+          'Error executing: $cl',
+          cause: await utf8.decodeStream(process.stderr),
+        );
+      }
+
+      final result = await utf8.decodeStream(process.stdout);
+
+      return result;
+    } on MarkupException catch (_) {
+      rethrow;
+    } catch (e, stack) {
       throw MarkupException.fromSection(
         section,
-        'Error executing: $cl',
-        cause: process.stderr?.toString(),
+        'Error executing plugin: ${plugin.command}',
+        cause: e,
+        stackTrace: stack,
       );
     }
-
-    return process.stdout?.toString() ?? '';
   }
 
   @override
-  MarkupOutput process(MarkdownDocument doc) {
-    final wd = getEntity<Directory>(doc, _params.workingDirectory);
-    if (!wd.existsSync()) {
-      throw MarkupException.fromSection(
-        section,
-        'Unable to locate working directory: ${wd.absolute.path}',
-      );
-    }
-    final output = _defaultRunner(
-      args: _params.args,
-      command: _params.command,
-      ignoreExitCode: _params.ignoreExitCode,
+  Future<MarkupOutput> process(MarkdownDocument doc) async {
+    final output = await _defaultRunner(
+      doc: doc,
       logger: logger,
+      plugin: plugin,
       section: section,
-      workingDirectory: wd,
     );
 
-    return MarkupOutput.fromSection(output, section: section);
+    return MarkupOutput(output, end: section.end, start: section.start);
   }
-}
-
-@JsonSerializable()
-class _Params({
-  final List<String> args = const [],
-  required final String command,
-  @JsonKey(name: 'ignore-exit-code') final bool ignoreExitCode = false,
-  @JsonKey(name: 'working-directory') final String workingDirectory = '.',
-}) {
-  factory fromJson(Map<String, dynamic> json) => _$ParamsFromJson(json);
 }
