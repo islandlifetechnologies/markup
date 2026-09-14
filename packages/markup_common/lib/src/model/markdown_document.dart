@@ -35,12 +35,18 @@ class MarkdownDocument(
         final processor = registry.create(section);
         if (!processor.postProcessor) {
           final output = await processor.process(this);
+          if (processor.replace) {
+            result.removeLast();
+          }
           result.add(output);
         }
       } else if (section is MarkupFence) {
         final processor = registry.maybeCreate(section);
         if (processor != null && !processor.postProcessor) {
           final output = await processor.process(this);
+          if (processor.replace) {
+            result.removeLast();
+          }
           result.add(output);
         }
       }
