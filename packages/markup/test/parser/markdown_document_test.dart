@@ -3,6 +3,8 @@ import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
 void main() {
+  initLogging(level: Level.ALL);
+
   test('full_processor', () async {
     final registry = DefaultMarkupRegistry();
     final output = registry.fs.directory('test/output');

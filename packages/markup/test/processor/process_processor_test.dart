@@ -3,6 +3,7 @@ import 'package:markup/src/constant/pubspec.dart';
 import 'package:test/test.dart';
 
 void main() {
+  initLogging(level: Level.ALL);
   final registry = DefaultMarkupRegistry();
   final scanner = MarkdownScanner.fromFile(
     registry.fs.file('test/assets/process.md'),
@@ -30,8 +31,8 @@ markup ${kPubspec.version}
                  [ALL, FINEST, FINER, FINE, CONFIG, INFO, WARNING, SEVERE, SHOUT, OFF]
 -o, --output     If set, all results will be written to this path and it's sub paths.
     --dry-run    Perform a dry run, print all the logs, but do not write any Markdown files.
-    --help       Display this message
-    --version    Display version information
+    --help       Display this message.
+    --version    Display version information.
 <!-- /markup:output -->
 ''');
   });

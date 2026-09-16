@@ -3,6 +3,7 @@ import 'package:markup/src/constant/pubspec.dart';
 import 'package:test/test.dart';
 
 void main() {
+  initLogging(level: Level.ALL);
   final registry = DefaultMarkupRegistry();
   final scanner = MarkdownScanner.fromFile(
     registry.fs.file('test/assets/template.md'),

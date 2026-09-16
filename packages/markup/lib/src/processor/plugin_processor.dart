@@ -34,7 +34,6 @@ class PluginProcessor(
       plugin.command,
       plugin.args,
       runInShell: true,
-      workingDirectory: plugin.workingDirectory ?? '.',
     );
     try {
       final input = MarkupPluginInput(doc: doc, section: section);
@@ -54,13 +53,14 @@ class PluginProcessor(
         }
       });
 
+      // ignore: unawaited_futures
       process.exitCode.then((c) {
         if (!completer.isCompleted) {
           completer.complete(c);
         }
       });
 
-      logger.info('Waiting plugin: ${plugin.command}');
+      logger.info('Waiting for plugin: ${plugin.command}');
       final exitCode = await completer.future;
 
       if (exitCode != 0 && !plugin.ignoreExitCode) {

@@ -6,12 +6,26 @@ part 'markup_configuration.g.dart';
 
 @JsonSerializable()
 class MarkupConfiguration({
+  /// Perform a dry run, print all the logs, but do not write any Markdown
+  /// files.
   @JsonKey(name: 'dry-run') final bool dryRun = false,
+
+  /// Display help message.
   final bool help = false,
+
+  /// The search glob to find the file or files to modify.
   final String include = '**/*.md',
+
+  /// Log level to use.
   final String log = 'INFO',
+
+  /// If set, all results will be written to this path and it's sub paths.
   final String? output,
+
+  /// The plugins to use.
   final Map<String, MarkupPluginData>? plugins,
+
+  /// Display version information.
   final bool version = false,
 }) {
   factory fromJson(Map<String, dynamic> json) =>
@@ -49,10 +63,10 @@ class MarkupConfiguration({
         help: 'Perform a dry run, print all the logs, but do not write any Markdown files.',
         negatable: false,
       )
-      ..addFlag('help', help: 'Display this message', negatable: false)
+      ..addFlag('help', help: 'Display this message.', negatable: false)
       ..addFlag(
         'version',
-        help: 'Display version information',
+        help: 'Display version information.',
         negatable: false,
       );
 
@@ -99,7 +113,6 @@ class MarkupPluginData({
   @JsonKey(name: 'replace') final bool replace = false,
   @JsonKey(name: 'timeout', fromJson: JsonClass.parseDurationFromSeconds)
   final Duration timeout = const Duration(minutes: 1),
-  @JsonKey(name: 'working-directory') final String? workingDirectory,
 }) {
   factory fromJson(Map<String, dynamic> json) =>
       _$MarkupPluginDataFromJson(json);

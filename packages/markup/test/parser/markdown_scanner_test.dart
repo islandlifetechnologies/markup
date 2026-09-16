@@ -2,6 +2,7 @@ import 'package:markup/markup.dart';
 import 'package:test/test.dart';
 
 void main() {
+  initLogging(level: Level.ALL);
   final registry = DefaultMarkupRegistry();
   test('simple', () {
     final markdown = registry.fs.file('test/assets/toc.md').readAsStringSync();
@@ -76,7 +77,7 @@ void main() {
 
     final doc = scanner.scan();
 
-    expect(doc.length, 9);
+    expect(doc.length, 11);
     expect(doc[0], isA<MarkdownContent>());
     expect(doc[1], isA<MarkupFence>());
     expect((doc[1] as MarkupFence).type, 'dart');
@@ -123,5 +124,17 @@ No type on this one
 ```
 ''');
     expect(doc[8], isA<MarkdownContent>());
+    expect(doc[9], isA<MarkupFence>());
+    expect((doc[9] as MarkupFence).type, 'mermaid');
+    expect((doc[9] as MarkupFence).content, '''
+```mermaid
+graph LR
+    A[Square Rect] -- Link text --> B((Circle))
+    A --> C(Round Rect)
+    B --> D{Rhombus}
+    C --> D
+```
+''');
+    expect(doc[10], isA<MarkdownContent>());
   });
 }

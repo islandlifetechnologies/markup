@@ -2,6 +2,7 @@ import 'package:markup/markup.dart';
 import 'package:test/test.dart';
 
 void main() {
+  initLogging(level: Level.ALL);
   final registry = DefaultMarkupRegistry();
   final scanner = MarkdownScanner.fromFile(
     registry.fs.file('test/assets/file.md'),

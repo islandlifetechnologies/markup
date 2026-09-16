@@ -66,6 +66,24 @@ class DrawIoProcessor(
     logger.fine('$dockerExe ${args.join(' ')}');
     final process = Process.runSync(dockerExe, args);
 
+    if (process.exitCode != 0) {
+      for (final (name, io) in [
+        ('stdio', process.stdout?.toString()),
+        ('stderr', process.stderr?.toString()),
+      ]) {
+        if (io != null && io.isNotEmpty) {
+          logger.severe('''
+$name:
+${io.splitMapJoin('\n', onNonMatch: (s) => '  $s')}
+''');
+        }
+      }
+      throw MarkupException.fromSection(section, '''
+Error exporting drawio from [${file.path}].
+Exit code: ${process.exitCode}.
+''');
+    }
+
     for (final (name, io) in [
       ('stdio', process.stdout?.toString()),
       ('stderr', process.stderr?.toString()),
@@ -77,14 +95,6 @@ ${io.splitMapJoin('\n', onNonMatch: (s) => '  $s')}
 ''');
       }
     }
-
-    if (process.exitCode != 0) {
-      throw MarkupException.fromSection(section, '''
-Error exporting drawio from [${file.path}].
-Exit code: ${process.exitCode}.
-''');
-    }
-
     return fs.file(outFile);
   }
 

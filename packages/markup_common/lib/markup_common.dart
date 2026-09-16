@@ -23,7 +23,6 @@ export 'src/model/markup_ignore.dart';
 export 'src/model/markup_output.dart';
 export 'src/model/markup_plugin_input.dart';
 export 'src/model/markup_section.dart';
-export 'src/plugin/markup_plugin.dart';
 export 'src/plugin/markup_plugin_args.dart';
 export 'src/plugin/markup_plugin_runner.dart';
 export 'src/processor/markup_processor.dart';
