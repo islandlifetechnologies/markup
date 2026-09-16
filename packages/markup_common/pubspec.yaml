@@ -20,7 +20,7 @@ dependencies:
   meta: ^1.16.0
   path: ^1.9.1
   template_expressions: ^4.3.0
-  yaon: ^2.0.2
+  yaon: ^2.0.3
 
 dev_dependencies:
   build_runner: ^2.16.0
