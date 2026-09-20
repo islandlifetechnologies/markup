@@ -4,9 +4,13 @@
 
 <!-- markup:toc /-->
 
+---
+
 ## Introduction
 
 Markup is a package to provide automated processing for Markdown files to be able to simplify the creation and maintenance of documentation.
+
+---
 
 ## Syntax
 
@@ -14,7 +18,37 @@ Like most markdown processors, markup uses comments to annotate the processing t
 
 All directives take the general form of `<!-- markup:directive`. The difference in what follows is defined by whether it is a single tag format or a block format.
 
-All markup directives must begin on their own line. [Single Tag](#single-tag) forms may span multiple lines after the declaration of the directive.
+All markup directives must begin on their own line. [Single Tag](#single-tag) forms may span multiple lines after the declaration of the directive. For example, this is ok:
+
+```markdown
+<!-- markup:toc -->
+
+<!-- markup:ignore -->
+<!-- /markup:ignore -->
+
+<!-- markup:drawio
+{
+  "file": "my.drawio",
+  "type": "svg"
+}
+/-->
+```
+
+However, these are not:
+
+```markdown
+**Table of Contents**: <!-- markup:toc -->
+
+Ignore the <!-- markup:ignore -->middle text<!-- /markup:ignore --> in this sentence.
+
+<!-- markup:drawio
+{
+  "file": "my.drawio",
+  "type": "svg"
+}/-->
+```
+
+---
 
 ### Single Tag
 
@@ -30,12 +64,14 @@ That can be added in any of the following ways:
 
 ```markdown
 <!-- markdown:name {"file": "my.drawio", "type": "svg"} /-->
+
 <!-- markdown:name
 {
   "file": "my.drawio",
   "type": "svg"
 }
 /-->
+
 <!-- markdown:name
 file: my.drawio
 type: svg
@@ -43,6 +79,8 @@ type: svg
 ```
 
 <!-- /markup:ignore -->
+
+---
 
 ### Block Tag
 
@@ -60,6 +98,8 @@ The block tags start and end with markup comment. The content within the tags is
 
 <!-- /markup:ignore -->
 
+---
+
 ### Fence Tag
 
 The fence tags utilize the standard GitHub fence syntax. This mechanism is provided for plugins as no built in processors exist for the fence syntax. For an example, see the [markup_mermaid](https://pub.dev/packages/markup_mermaid) plugin.
@@ -74,6 +114,8 @@ graph LR
 ```
 ````
 
+---
+
 ## Built In Directives
 
 | Directive  | Type     | Description                                                                          |
@@ -85,6 +127,8 @@ graph LR
 | `process`  | `single` | Executes a process and places the `stdio` from the process into the output.          |
 | `template` | `single` | Processes a [template_expression] and places the results into the output.            |
 | `toc`      | `single` | Generates a Table of Contents for the document and places it into the output.        |
+
+---
 
 ### `drawio`
 
@@ -102,6 +146,8 @@ graph LR
 | `mode`  | `String = 'svg'` |        :x:         | Either `png` or `svg`. Defiles the file type to export.                                 |
 | `width` | `int?`           |        :x:         | Only applies when exporting a `png`. Defines the width to use for the exported image.   |
 
+---
+
 ### `file`
 
 **Example**
@@ -114,6 +160,8 @@ graph LR
 | ------ | -------- | :----------------: | -------------------------------------------------------------- |
 | `file` | `String` | :white_check_mark: | The path, relative to the Markdown file, of the file to embed. |
 
+---
+
 ### `ignore`
 
 **Example**
@@ -124,6 +172,8 @@ graph LR
 
 _n/a_
 
+---
+
 ### `output`
 
 **Example**
@@ -133,6 +183,8 @@ _n/a_
 **Parameters**
 
 _n/a_
+
+---
 
 ### `process`
 
@@ -149,6 +201,8 @@ _n/a_
 | `ignore-exit-code`  | `bool = false` |        :x:         | When `true`, ignores non-zero exit codes and uses whatever `stdout` was emitted. |
 | `working-directory` | `String = '.'` | :white_check_mark: | The working directory to run the command from.                                   |
 
+---
+
 ### `template`
 
 **Example**
@@ -163,6 +217,8 @@ _n/a_
 | `file`     | `String?`               | :white_check_mark: | The file containing the template to process. Either this or `template` is required.          |
 | `syntax`   | `String`                |        :x:         | The [Template Syntax] to use when processing the template.                                   |
 | `template` | `String?`               | :white_check_mark: | The template to process. Either this or `file` is required.                                  |
+
+---
 
 ### `toc`
 
@@ -231,13 +287,13 @@ plugins:
 
 **Parameters**
 
-| Name      | Type                   | Description                                                                                                          |
-| --------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `dry-run` | `bool = false`         | Perform a dry run, print all the logs, but do not write any Markdown files.                                          |
-| `include` | `String = '**/*.md'`   | The search glob to find the file or files to modify.                                                                |
+| Name      | Type                   | Description                                                                                                                |
+| --------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `dry-run` | `bool = false`         | Perform a dry run, print all the logs, but do not write any Markdown files.                                                |
+| `include` | `String = '**/*.md'`   | The search glob to find the file or files to modify.                                                                       |
 | `log`     | `String = 'INFO'`      | Log level to use. Allowed values: `ALL`, `FINEST`, `FINER`, `FINE`, `CONFIG`, `INFO`, `WARNING`, `SEVERE`, `SHOUT`, `OFF`. |
-| `output`  | `String?`              | If set, all results will be written to this path and its sub paths.                                                  |
-| `plugins` | `Map<String, Plugin>?` | The plugins to use, keyed by the directive or code fence tag name.                                                   |
+| `output`  | `String?`              | If set, all results will be written to this path and its sub paths.                                                        |
+| `plugins` | `Map<String, Plugin>?` | The plugins to use, keyed by the directive or code fence tag name.                                                         |
 
 ---
 
@@ -271,13 +327,13 @@ plugins:
 
 **Parameters**
 
-| Name               | Type                | Description                                                                                                                                                      |
-| ------------------ | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `args`             | `List<String> = []` | The optional arguments to pass to the plugin command.                                                                                                            |
-| `command`          | `String`            | The command to execute.                                                                                                                                          |
-| `ignore-exit-code` | `bool = false`      | When `true`, ignores non-zero exit codes and uses whatever `stdout` was emitted.                                                                                 |
+| Name               | Type                | Description                                                                                                                                                     |
+| ------------------ | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `args`             | `List<String> = []` | The optional arguments to pass to the plugin command.                                                                                                           |
+| `command`          | `String`            | The command to execute.                                                                                                                                         |
+| `ignore-exit-code` | `bool = false`      | When `true`, ignores non-zero exit codes and uses whatever `stdout` was emitted.                                                                                |
 | `post-processor`   | `bool = false`      | Defines if the processor is meant to run after the first pass of processing. This should only be `true` when the processor utilizes output of other processors. |
-| `replace`          | `bool = false`      | Defines if the processor should replace the source content with the output of the process. When `false`, the output will be appended.                         |
+| `replace`          | `bool = false`      | Defines if the processor should replace the source content with the output of the process. When `false`, the output will be appended.                           |
 | `timeout`          | `int = 60`          | The maximum duration in seconds to wait for the plugin to finish executing (defaults to 1 minute).                                                              |
 
 <!-- links -->

@@ -37,7 +37,7 @@ classDiagram
     }
 ```
 
-```mermaid {"type": "png", "backgroundColor": "#000", "width": 800}
+```mermaid {"outputFormat": "png", "backgroundColor": "#000", "width": 800}
 flowchart TD
     Start --> Stop
 ```
