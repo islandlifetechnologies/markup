@@ -1,12 +1,12 @@
-name: Tag & Publish (Markup)
+name: Tag & Publish (Mermaid)
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths:
-      - .github/workflows/publish.yaml
-      - packages/markup/pubspec.yaml
+      - .github/workflows/publish_mermaid.yaml
+      - packages/markup_mermaid/pubspec.yaml
 
 jobs:
   build:
@@ -28,7 +28,7 @@ jobs:
           dart run build_runner build
           dart analyze
           dart test
-        working-directory: ./packages/markup
+        working-directory: ./packages/markup_mermaid
 
       - name: Create Tag
         shell: bash
@@ -37,7 +37,7 @@ jobs:
 
           dart pub global activate -sgit https://github.com/islandlifetechnologies/action-pubspec-tag
           dart pub global run dart_version_autotag:tag --token "${{ secrets.GITHUB_TOKEN }}"
-        working-directory: ./packages/markup
+        working-directory: ./packages/markup_mermaid
 
       - name: Publish
         shell: bash
@@ -52,4 +52,4 @@ jobs:
           printf '${{ secrets.PUB_CREDENTIALS }}' > ~/.config/dart/pub-credentials.json
 
           dart pub publish --force
-        working-directory: ./packages/markup
+        working-directory: ./packages/markup_mermaid
