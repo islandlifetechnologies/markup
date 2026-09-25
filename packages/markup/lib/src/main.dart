@@ -9,7 +9,7 @@ import 'package:markup/src/constant/pubspec.dart';
 import 'package:markup/src/processor/plugin_processor.dart';
 import 'package:path/path.dart' as p;
 
-Future<void> main(List<String> args) async {
+Future<void> main(List<String> args, {bool allowExit = true}) async {
   final registry = DefaultMarkupRegistry();
   final logger = initLogging(name: 'main');
   final cd = registry.fs.directory('.');
@@ -22,12 +22,17 @@ Future<void> main(List<String> args) async {
       print('');
       print(parser.usage);
     }
-    exit(0);
+    if (allowExit) {
+      exit(0);
+    }
+    throw UnsupportedError('Should have exited');
   }
 
   final level =
       Level.LEVELS.where((l) => l.name == config.log).firstOrNull ?? Level.INFO;
   Logger.root.level = level;
+
+  logger.config(config.toString());
 
   final output = config.output;
   Directory? outDir;
@@ -50,7 +55,20 @@ Future<void> main(List<String> args) async {
         .where((p) => p != '.' && p != '..');
     return parts.where((p) => p.startsWith('.')).isEmpty;
   })) {
-    logger.info('Processing: ${file.path}');
+    for (final entry
+        in (config.plugins ?? const <String, MarkupPluginData>{}).entries) {
+      final plugin = entry.value;
+      logger.config('Registering plugin: ${entry.key}');
+      registry.registerBuilder(entry.key, (section, {required registry}) {
+        return PluginProcessor(
+          section,
+          plugin: plugin,
+          registry: registry,
+          type: entry.key,
+        );
+      });
+    }
+    logger.info('Scanning: ${file.path}');
     final scanner = MarkdownScanner.fromFile(
       file,
       output: outDir == null
@@ -65,20 +83,12 @@ Future<void> main(List<String> args) async {
               ),
             ),
     );
-    final doc = scanner.scan();
-
-    for (final entry
-        in (config.plugins ?? const <String, MarkupPluginData>{}).entries) {
-      final plugin = entry.value;
-      logger.config('Registering plugin: ${entry.key})');
-      registry.registerBuilder(entry.key, (section, {required registry}) {
-        return PluginProcessor(
-          section,
-          plugin: plugin,
-          registry: registry,
-          type: entry.key,
-        );
-      });
+    final doc = scanner.scan(registry: registry);
+    if (logger.isLoggable(Level.FINEST)) {
+      logger.finest('Document Sections:');
+      for (final section in doc.sections) {
+        logger.finest('  • ${section.runtimeType}: ${section.sectionType}');
+      }
     }
     final result = await doc.process(registry);
 
@@ -92,5 +102,11 @@ Future<void> main(List<String> args) async {
       }
       outFile.writeAsStringSync(result.toString());
     }
+  }
+
+  logger.info('Complete.');
+
+  if (allowExit) {
+    exit(0);
   }
 }

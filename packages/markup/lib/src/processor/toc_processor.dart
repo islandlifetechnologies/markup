@@ -9,7 +9,9 @@ class TocProcessor(
   super.type = kType,
 }) extends MarkupProcessor {
   this {
-    _params = _Params.fromJson((section as MarkupDirective).params);
+    final directive = section as MarkupDirective;
+    _output = directive.output;
+    _params = _Params.fromJson(directive.params);
   }
 
   static const kType = 'toc';
@@ -18,6 +20,7 @@ class TocProcessor(
   static final _linkRegEx = RegExp(r'(?<title>\[.*\])(?<link>\(.*\))?');
   static final _titleRegEx = RegExp(r'^(?<level>#+)(?<title>\s+(.*))$');
 
+  late final MarkupDirectiveOutput _output;
   late final _Params _params;
 
   @override
@@ -102,7 +105,11 @@ class TocProcessor(
       buf.writeln('$indent${_params.bullet} [${entry.title}](#${entry.slug})');
     }
 
-    return MarkupOutput.fromSection(buf.toString(), section: section);
+    return MarkupOutput.fromSection(
+      buf.toString(),
+      output: _output,
+      section: section,
+    );
   }
 
   String _removeComments(String input) {

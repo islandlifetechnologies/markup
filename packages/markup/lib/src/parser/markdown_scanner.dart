@@ -19,7 +19,7 @@ class MarkdownScanner(
   );
   static final markupRegEx = RegExp(r'^<!--\s*markup:');
 
-  MarkdownDocument scan() {
+  MarkdownDocument scan({required MarkupRegistry registry}) {
     final scanner = StringScanner.fromString(input);
 
     final sections = <MarkdownSection>[];
@@ -45,7 +45,8 @@ class MarkdownScanner(
           ? null
           : markupRegEx.firstMatch(line);
 
-      if (fenceBlock != null) {
+      if (fenceBlock != null &&
+          registry.canProcess(fenceBlock.namedGroup('type'))) {
         stashBuffer(startNum);
         startNum = scanner.offset;
         final fence = fenceBlock.namedGroup('fence')!;

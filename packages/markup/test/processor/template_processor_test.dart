@@ -8,7 +8,7 @@ void main() {
   final scanner = MarkdownScanner.fromFile(
     registry.fs.file('test/assets/template.md'),
   );
-  final doc = scanner.scan();
+  final doc = scanner.scan(registry: registry);
 
   test('template:0', () async {
     final directive = doc[0] as MarkupDirective;

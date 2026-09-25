@@ -30,7 +30,7 @@ plugins:
     replace: true
 ''');
 
-    await m.main(['-c', 'output/markup.yaml']);
+    await m.main(['-c', 'output/markup.yaml'], allowExit: false);
 
     expect(exitCode, 0);
   });

@@ -26,10 +26,21 @@ class MarkupDirective(
       final paramStr = match.namedGroup('params')?.trim();
 
       type = key;
-      _params = yaon.parse(paramStr) ?? const <String, dynamic>{};
+      try {
+        _params = yaon.parse(paramStr) ?? const <String, dynamic>{};
+      } catch (e, stack) {
+        throw MarkupException.fromSection(
+          this,
+          'Error parsing YAML:\n$paramStr',
+          cause: e,
+          stackTrace: stack,
+        );
+      }
     } else {
       _params = params;
     }
+
+    output = MarkupDirectiveOutput.fromJson(_params['output'] ?? const {});
   }
 
   factory fromJson(Map<String, dynamic> json) =>
@@ -39,6 +50,9 @@ class MarkupDirective(
 
   late final Map<String, dynamic> _params;
 
+  @JsonKey(includeFromJson: false)
+  late final MarkupDirectiveOutput output;
+
   @override
   late final String type;
 
@@ -47,4 +61,15 @@ class MarkupDirective(
 
   @override
   Map<String, dynamic> toJson() => _$MarkupDirectiveToJson(this);
+}
+
+@JsonSerializable()
+class MarkupDirectiveOutput({
+  final String? fence,
+  @JsonKey(name: 'fence-type') final String? fenceType,
+}) {
+  factory fromJson(Map<String, dynamic> json) =>
+      _$MarkupDirectiveOutputFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MarkupDirectiveOutputToJson(this);
 }

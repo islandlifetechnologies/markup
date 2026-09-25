@@ -3,14 +3,14 @@ import 'package:test/test.dart';
 
 void main() {
   initLogging(level: Level.ALL);
-  final registry = DefaultMarkupRegistry();
   test('simple', () {
+    final registry = DefaultMarkupRegistry();
     final markdown = registry.fs.file('test/assets/toc.md').readAsStringSync();
     final scanner = MarkdownScanner(markdown);
 
-    final doc = scanner.scan();
+    final doc = scanner.scan(registry: registry);
 
-    expect(doc.length, 15);
+    expect(doc.length, 13);
 
     expect(doc[0], isA<MarkdownContent>());
     expect(doc[1], isA<MarkupDirective>());
@@ -65,19 +65,31 @@ void main() {
 <!-- /markup:output -->
 ''');
     expect(doc[12], isA<MarkdownContent>());
-    expect(doc[13], isA<MarkupFence>());
-    expect(doc[14], isA<MarkdownContent>());
   });
 
   test('fence', () {
+    final registry = DefaultMarkupRegistry();
+    registry
+      ..registerBuilder('dart', (section, {required registry}) {
+        throw UnimplementedError();
+      })
+      ..registerBuilder('markdown', (section, {required registry}) {
+        throw UnimplementedError();
+      })
+      ..registerBuilder('mermaid', (section, {required registry}) {
+        throw UnimplementedError();
+      })
+      ..registerBuilder('yaml', (section, {required registry}) {
+        throw UnimplementedError();
+      });
     final markdown = registry.fs
         .file('test/assets/fence.md')
         .readAsStringSync();
     final scanner = MarkdownScanner(markdown);
 
-    final doc = scanner.scan();
+    final doc = scanner.scan(registry: registry);
 
-    expect(doc.length, 11);
+    expect(doc.length, 9);
     expect(doc[0], isA<MarkdownContent>());
     expect(doc[1], isA<MarkupFence>());
     expect((doc[1] as MarkupFence).type, 'dart');
@@ -102,31 +114,22 @@ print('Hello')
     expect((doc[3] as MarkupFence).indent, 0);
     expect(doc[4], isA<MarkdownContent>());
     expect(doc[5], isA<MarkupFence>());
-    expect((doc[5] as MarkupFence).type, '');
+    expect((doc[5] as MarkupFence).type, 'yaml');
     expect((doc[5] as MarkupFence).content, '''
-```
-No type on this one
-```
-''');
-    expect((doc[5] as MarkupFence).indent, 0);
-    expect(doc[6], isA<MarkdownContent>());
-    expect(doc[7], isA<MarkupFence>());
-    expect((doc[7] as MarkupFence).type, 'yaml');
-    expect((doc[7] as MarkupFence).content, '''
   ```yaml
   # This is associated with the bullet
   ```
 ''');
-    expect((doc[7] as MarkupFence).indent, 2);
-    expect((doc[7] as MarkupFence).withoutIndent, '''
+    expect((doc[5] as MarkupFence).indent, 2);
+    expect((doc[5] as MarkupFence).withoutIndent, '''
 ```yaml
 # This is associated with the bullet
 ```
 ''');
     expect(doc[8], isA<MarkdownContent>());
-    expect(doc[9], isA<MarkupFence>());
-    expect((doc[9] as MarkupFence).type, 'mermaid');
-    expect((doc[9] as MarkupFence).content, '''
+    expect(doc[7], isA<MarkupFence>());
+    expect((doc[7] as MarkupFence).type, 'mermaid');
+    expect((doc[7] as MarkupFence).content, '''
 ```mermaid
 graph LR
     A[Square Rect] -- Link text --> B((Circle))
@@ -135,6 +138,6 @@ graph LR
     C --> D
 ```
 ''');
-    expect(doc[10], isA<MarkdownContent>());
+    expect(doc[8], isA<MarkdownContent>());
   });
 }

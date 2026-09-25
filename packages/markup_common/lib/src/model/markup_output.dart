@@ -17,14 +17,36 @@ class MarkupOutput(
 }) extends MarkupBlock {
   factory fromJson(Map<String, dynamic> json) => _$MarkupOutputFromJson(json);
 
-  factory fromSection(String content, {required MarkdownSection section}) =>
-      MarkupOutput(
-        '<!-- markup:output -->\n${content.trim()}\n<!-- /markup:output -->\n',
-        end: section.start + 1 + content.split('\n').length,
-        start: section.start + 1,
-      );
+  factory fromSection(
+    String content, {
+    MarkupDirectiveOutput? output,
+    required MarkdownSection section,
+  }) {
+    final result =
+        '<!-- markup:output -->\n${_wrapOutput(content.trim(), output: output)}\n<!-- /markup:output -->\n';
+
+    return MarkupOutput(
+      result,
+      end: section.start + 1 + result.split('\n').length,
+      start: section.start + 1,
+    );
+  }
 
   static const kSectionType = _kSectionType;
+
+  static String _wrapOutput(String content, {MarkupDirectiveOutput? output}) {
+    var result = content;
+    if (output != null) {
+      final type = output.fenceType;
+      final fence = output.fence ?? (type == null ? null : '```');
+
+      if (fence != null) {
+        result = '$fence${type ?? ''}\n$content\n$fence';
+      }
+    }
+
+    return result;
+  }
 
   @override
   Map<String, dynamic> toJson() => _$MarkupOutputToJson(this);

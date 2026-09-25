@@ -16,7 +16,7 @@ void main() {
       registry.fs.file('test/assets/full_processing.md'),
       output: output,
     );
-    final doc = scanner.scan();
+    final doc = scanner.scan(registry: registry);
     final result = await doc.process(DefaultMarkupRegistry());
 
     registry.fs.file(p.join(output.path, 'full_processing.md'))

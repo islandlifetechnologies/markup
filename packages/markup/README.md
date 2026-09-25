@@ -1,8 +1,23 @@
 ![Banner](https://raw.githubusercontent.com/islandlifetechnologies/markup/refs/heads/main/assets/banner-800w.jpg)
 
 **Table of Contents**
-
 <!-- markup:toc /-->
+<!-- markup:output -->
+- [Introduction](#introduction)
+- [Syntax](#syntax)
+  - [Block Tag](#block-tag)
+  - [Fence Tag](#fence-tag)
+- [Built In Directives](#built-in-directives)
+  - [drawio](#drawio)
+  - [file](#file)
+  - [ignore](#ignore)
+  - [output](#output)
+  - [process](#process)
+  - [template](#template)
+  - [toc](#toc)
+- [Markup Configuration](#markup-configuration)
+- [Plugins](#plugins)
+<!-- /markup:output -->
 
 ---
 
@@ -18,36 +33,6 @@ Like most markdown processors, markup uses comments to annotate the processing t
 
 All directives take the general form of `<!-- markup:directive`. The difference in what follows is defined by whether it is a single tag format or a block format.
 
-All markup directives must begin on their own line. [Single Tag](#single-tag) forms may span multiple lines after the declaration of the directive. For example, this is ok:
-
-```markdown
-<!-- markup:toc -->
-
-<!-- markup:ignore -->
-<!-- /markup:ignore -->
-
-<!-- markup:drawio
-{
-  "file": "my.drawio",
-  "type": "svg"
-}
-/-->
-```
-
-However, these are not:
-
-```markdown
-**Table of Contents**: <!-- markup:toc -->
-
-Ignore the <!-- markup:ignore -->middle text<!-- /markup:ignore --> in this sentence.
-
-<!-- markup:drawio
-{
-  "file": "my.drawio",
-  "type": "svg"
-}/-->
-```
-
 ---
 
 ### Single Tag
@@ -59,7 +44,6 @@ Single tags are contained within a single comment itself and the contents of the
 ```
 
 That can be added in any of the following ways:
-
 <!-- markup:ignore -->
 
 ```markdown
@@ -85,7 +69,6 @@ type: svg
 ### Block Tag
 
 The block tags start and end with markup comment. The content within the tags is visible via the rendered Markdown file. An example of a block tag is:
-
 <!-- markup:ignore -->
 
 ```markdown
@@ -241,8 +224,30 @@ Markup can be configured via CLI Args or via a configuration file that may be in
 [Plugins](#plugins) can only be added via the configuration file, they cannot be passed in via the CLI.
 
 **CLI Args**
+<!-- markup:process
 
-<!-- markup:process {"command": "dart bin/markup.dart --help"} /-->
+command: dart
+args:
+  - bin/markup.dart
+  - --help
+output:
+  fence: "```"
+
+/-->
+<!-- markup:output -->
+```
+markup 1.0.0
+
+-c, --config     Configuration file for markup to use.
+-i, --include    The search glob to find the file or files to modify.
+-l, --log        Log level to use.
+                 [ALL, FINEST, FINER, FINE, CONFIG, INFO, WARNING, SEVERE, SHOUT, OFF]
+-o, --output     If set, all results will be written to this path and it's sub paths.
+    --dry-run    Perform a dry run, print all the logs, but do not write any Markdown files.
+    --help       Display this message.
+    --version    Display version information.
+```
+<!-- /markup:output -->
 
 **Config File**
 

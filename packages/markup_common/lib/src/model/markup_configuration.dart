@@ -72,7 +72,9 @@ class MarkupConfiguration({
 
     final parsed = parser.parse(args);
 
-    final configPath = parsed['config'];
+    final configPath =
+        parsed['config'] ??
+        (fs.file('markup.yaml').existsSync() ? 'markup.yaml' : null);
     final config = <String, dynamic>{
       'dry-run': parsed['dry-run'],
       'help': parsed['help'],
@@ -102,6 +104,31 @@ class MarkupConfiguration({
   }
 
   Map<String, dynamic> toJson() => _$MarkupConfigurationToJson(this);
+
+  @override
+  String toString() {
+    final buf = StringBuffer();
+
+    buf.writeln('Configuration:');
+    buf.writeln('  • dry-run: $dryRun');
+    buf.writeln('  • help: $help');
+    buf.writeln('  • include: $include');
+    buf.writeln('  • log: $log');
+    buf.writeln('  • output: $output');
+    buf.writeln('  • version: $version');
+    buf.writeln('  • plugins: ${plugins?.length}');
+
+    for (final plugin in (plugins ?? <String, MarkupPluginData>{}).entries) {
+      buf.writeln('    • ${plugin.key}:');
+      buf.writeln('      • command: ${plugin.value.command}');
+      buf.writeln('      • args: ${plugin.value.args.join(', ')}');
+      buf.writeln('      • ignore-exit-code: ${plugin.value.ignoreExitCode}');
+      buf.writeln('      • post-processor: ${plugin.value.postProcessor}');
+      buf.writeln('      • replace: ${plugin.value.replace}');
+      buf.writeln('      • timeout: ${plugin.value.timeout}');
+    }
+    return buf.toString();
+  }
 }
 
 @JsonSerializable()

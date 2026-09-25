@@ -24,11 +24,14 @@ class DrawIoProcessor(
   @visibleForTesting final DrawIoRunner _runner = _defaultDrawIoRunner,
 }) extends MarkupProcessor {
   this {
-    _params = _Params.fromJson((section as MarkupDirective).params);
+    final directive = section as MarkupDirective;
+    _output = directive.output;
+    _params = _Params.fromJson(directive.params);
   }
 
   static const kType = 'drawio';
 
+  late final MarkupDirectiveOutput _output;
   late final _Params _params;
 
   static File _defaultDrawIoRunner({
@@ -125,7 +128,11 @@ ${io.splitMapJoin('\n', onNonMatch: (s) => '  $s')}
 
     final label = _params.label ?? outPath;
 
-    return MarkupOutput.fromSection('![$label]($outPath)', section: section);
+    return MarkupOutput.fromSection(
+      '![$label]($outPath)',
+      output: _output,
+      section: section,
+    );
   }
 }
 

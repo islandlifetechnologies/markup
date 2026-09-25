@@ -8,10 +8,13 @@ class TemplateProcessor(
   super.type = kType,
 }) extends MarkupProcessor {
   this {
-    _params = _Params.fromJson((section as MarkupDirective).params);
+    final directive = section as MarkupDirective;
+    _output = directive.output;
+    _params = _Params.fromJson(directive.params);
   }
   static const kType = 'template';
 
+  late final MarkupDirectiveOutput _output;
   late final _Params _params;
 
   @override
@@ -52,7 +55,11 @@ class TemplateProcessor(
       syntax: [_params.syntax.syntax],
     );
 
-    return MarkupOutput.fromSection(template.process(), section: section);
+    return MarkupOutput.fromSection(
+      template.process(),
+      output: _output,
+      section: section,
+    );
   }
 }
 
@@ -74,5 +81,5 @@ enum _TemplateSyntax(final ExpressionSyntax syntax) {
   hash(HashExpressionSyntax()),
   mustache(MustacheExpressionSyntax()),
   standard(StandardExpressionSyntax()),
-  pipe(PipeExpressionSyntax());
+  pipe(PipeExpressionSyntax()),
 }

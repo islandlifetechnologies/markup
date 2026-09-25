@@ -37,9 +37,9 @@ plugins:
 1. Create the config file:
    ```yaml
    plugins:
-   mermaid:
-     command: markup_mermaid
-     replace: true
+     mermaid:
+       command: markup_mermaid
+       replace: true
    ```
 1. Run markup to process the file.
 

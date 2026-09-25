@@ -21,6 +21,8 @@ class MarkupRegistry({
   final FileSystem fs;
   final _logger = Logger('MarkupRegistry');
 
+  bool canProcess(String? type) => _builders.containsKey(type);
+
   /// Creates a processor for the given directive.
   MarkupProcessor create(MarkupSection section) {
     _logger.config('Create builder: ${section.type}');

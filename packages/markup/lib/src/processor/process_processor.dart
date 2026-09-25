@@ -23,10 +23,13 @@ class ProcessProcessor(
   super.type = kType,
 }) extends MarkupProcessor {
   this {
-    _params = _Params.fromJson((section as MarkupDirective).params);
+    final directive = section as MarkupDirective;
+    _output = directive.output;
+    _params = _Params.fromJson(directive.params);
   }
   static const kType = 'process';
 
+  late final MarkupDirectiveOutput _output;
   late final _Params _params;
 
   static Future<String> _defaultRunner({
@@ -99,7 +102,7 @@ class ProcessProcessor(
       workingDirectory: wd,
     );
 
-    return MarkupOutput.fromSection(output, section: section);
+    return MarkupOutput.fromSection(output, output: _output, section: section);
   }
 }
 
