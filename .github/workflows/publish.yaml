@@ -57,7 +57,8 @@ jobs:
           mkdir -p outbin/linux/
           cp -f packages/markup/bin/markup outbin/linux/markup
           chmod +x outbin/linux/markup
-          git add outbin/linux
+          cd outbin
+          git add .
           git commit -m "Update linux binary"
           git push
 
@@ -129,7 +130,8 @@ jobs:
           mkdir -p outbin/macos/
           cp -f packages/markup/bin/markup outbin/macos/markup
           chmod +x outbin/macos/markup
-          git add outbin/macos
+          cd outbin
+          git add .
           git commit -m "Update macos binary"
           git push
 
@@ -177,6 +179,7 @@ jobs:
           if not exist "outbin\windows" mkdir "outbin\windows"
           cp -f packages\markup\bin\markup.exe outbin\windows\markup.exe
           chmod +x outbin\windows\markup.exe
-          git add outbin\windows
+          cd outbin
+          git add .
           git commit -m "Update windows binary"
           git push
