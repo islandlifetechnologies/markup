@@ -1,0 +1,43 @@
+name: Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  test-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        ref: bin
+        path: bin
+
+      - shell: bash
+        run: |
+          linux/markup --help
+
+  test-macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        ref: bin
+        path: bin
+
+      - shell: bash
+        run: |
+          macos/markup --help
+
+  test-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        ref: bin
+        path: bin
+
+      - shell: bash
+        run: |
+          windows/markup --help
