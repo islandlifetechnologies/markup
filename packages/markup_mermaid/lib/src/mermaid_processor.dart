@@ -40,12 +40,11 @@ class MermaidProcessor(
   }) async {
     try {
       logger.info('Preparing to run: mmdc ${args.join(' ')}');
+
       final process = await Process.start(
         'mmdc',
         args,
-        environment: {
-          'PUPPETEER_ARGS': '--no-sandbox --disable-setuid-sandbox',
-        },
+        environment: {'PUPPETEER_ARGS': '--no-sandbox'},
       );
 
       logger.info('Sending diagram content.');
