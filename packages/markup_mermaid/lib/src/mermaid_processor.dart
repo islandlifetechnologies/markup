@@ -43,7 +43,9 @@ class MermaidProcessor(
       final process = await Process.start(
         'mmdc',
         args,
-        environment: {'args': '--no-sandbox --disable-setuid-sandbox'},
+        environment: {
+          'PUPPETEER_ARGS': '--no-sandbox --disable-setuid-sandbox',
+        },
       );
 
       logger.info('Sending diagram content.');
