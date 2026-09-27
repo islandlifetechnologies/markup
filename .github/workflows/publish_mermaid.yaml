@@ -64,29 +64,29 @@ jobs:
           git commit --allow-empty -m "Update linux binary"
           git push
 
-      - name: Create Tag
-        shell: bash
-        run: |
-          set -e
+      # - name: Create Tag
+      #   shell: bash
+      #   run: |
+      #     set -e
 
-          dart pub global activate -sgit https://github.com/islandlifetechnologies/action-pubspec-tag
-          dart pub global run dart_version_autotag:tag --token "${{ secrets.GITHUB_TOKEN }}"
-        working-directory: ./packages/markup_mermaid
+      #     dart pub global activate -sgit https://github.com/islandlifetechnologies/action-pubspec-tag
+      #     dart pub global run dart_version_autotag:tag --token "${{ secrets.GITHUB_TOKEN }}"
+      #   working-directory: ./packages/markup_mermaid
 
-      - name: Publish
-        shell: bash
-        run: |
-          set -e
+      # - name: Publish
+      #   shell: bash
+      #   run: |
+      #     set -e
 
-          set +e
-          mkdir ~/.config
-          mkdir ~/.config/dart
+      #     set +e
+      #     mkdir ~/.config
+      #     mkdir ~/.config/dart
 
-          set -e
-          printf '${{ secrets.PUB_CREDENTIALS }}' > ~/.config/dart/pub-credentials.json
+      #     set -e
+      #     printf '${{ secrets.PUB_CREDENTIALS }}' > ~/.config/dart/pub-credentials.json
 
-          dart pub publish --force
-        working-directory: ./packages/markup_mermaid
+      #     dart pub publish --force
+      #   working-directory: ./packages/markup_mermaid
 
   build_macos:
     needs: build
