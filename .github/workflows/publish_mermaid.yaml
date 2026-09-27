@@ -30,6 +30,19 @@ jobs:
           dart test
         working-directory: ./packages/markup_mermaid
 
+      - name: Update Binary
+        shell: bash
+        run: |
+          set -e
+
+          mkdir -p outbin/linux/
+          cp -f packages/markup_mermaid/bin/markup_mermaid outbin/linux/markup_mermaid
+          chmod +x outbin/linux/markup_mermaid
+          cd outbin
+          git add .
+          git commit --allow-empty -m "Update linux binary"
+          git push
+
       - name: Create Tag
         shell: bash
         run: |
@@ -53,3 +66,101 @@ jobs:
 
           dart pub publish --force
         working-directory: ./packages/markup_mermaid
+
+  build_macos:
+    needs: build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Prepare Git
+        shell: bash
+        run: |
+          set -e
+
+          git config set user.name "${{ github.actor }}"
+          git config set user.email "${{ github.actor_email }}"
+
+      - name: Compile Binary
+        run: |
+          dart compile exe bin/markup.dart -o bin/markup
+        working-directory: ./packages/markup
+
+      - name: Prepare Git
+        shell: bash
+        run: |
+          set -e
+
+          git config --global user.email "action@github.com"
+          git config --global user.name "Github Action"
+
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          path: outbin
+          ref: bin
+
+      - name: Update Binary
+        shell: bash
+        run: |
+          set -e
+
+          mkdir -p outbin/macos/
+          cp -f packages/markup_mermaid/bin/markup_mermaid outbin/macos/markup_mermaid
+          chmod +x outbin/macos/markup_mermaid
+          cd outbin
+          git add .
+          git commit --allow-empty -m "Update macos binary"
+          git push
+
+  bin_windows:
+    needs: build_macos
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Prepare Git
+        shell: bash
+        run: |
+          set -e
+
+          git config --global user.email "action@github.com"
+          git config --global user.name "Github Action"
+
+      - name: Compile Binary
+        run: |
+          dart compile exe bin/markup_mermaid.dart -o bin/markup_mermaid.exe
+        working-directory: ./packages/markup_mermaid
+
+      - name: Prepare Git
+        shell: bash
+        run: |
+          set -e
+
+          git config set user.name "${{ github.actor }}"
+          git config set user.email "${{ github.actor_email }}"
+
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          path: outbin
+          ref: bin
+
+      - name: Update Binary
+        shell: bash
+        run: |
+          set -e
+
+          mkdir outbin/windows 2>nul
+          cp -f packages/markup_mermaid/bin/markup_mermaid.exe outbin/windows/markup_mermaid.exe
+          chmod +x outbin/windows/markup_mermaid.exe
+          cd outbin
+          git add .
+          git commit --allow-empty -m "Update windows binary"
+          git push
