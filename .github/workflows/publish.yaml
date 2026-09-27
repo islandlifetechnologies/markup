@@ -30,26 +30,150 @@ jobs:
           dart test
         working-directory: ./packages/markup
 
-      - name: Create Tag
+      - name: Compile Binary
+        run: |
+          dart compile exe bin/markup.dart -o bin/markup
+        working-directory: ./packages/markup
+
+      - name: Prepare Git
         shell: bash
         run: |
           set -e
 
-          dart pub global activate -sgit https://github.com/islandlifetechnologies/action-pubspec-tag
-          dart pub global run dart_version_autotag:tag --token "${{ secrets.GITHUB_TOKEN }}"
-        working-directory: ./packages/markup
+          git config set user.name "${{ github.actor }}"
+          git config set user.email "${{ github.actor_email }}"
 
-      - name: Publish
+      - uses: actions/checkout@v7
+        with:
+          ref: bin
+          fetch-depth: 0
+
+      - name: Update Binary
         shell: bash
         run: |
           set -e
 
-          set +e
-          mkdir ~/.config
-          mkdir ~/.config/dart
+          mkdir -p bin/linux/
+          cp -f packages/markup/bin/markup bin/linux/markup
+          chmod +x bin/linux/markup
+          git add bin/linux
+          git commit -m "Update linux binary"
+          git push
 
+      # - name: Create Tag
+      #   shell: bash
+      #   run: |
+      #     set -e
+
+      #     dart pub global activate -sgit https://github.com/islandlifetechnologies/action-pubspec-tag
+      #     dart pub global run dart_version_autotag:tag --token "${{ secrets.GITHUB_TOKEN }}"
+      #   working-directory: ./packages/markup
+
+      # - name: Publish
+      #   shell: bash
+      #   run: |
+      #     set -e
+
+      #     set +e
+      #     mkdir ~/.config
+      #     mkdir ~/.config/dart
+
+      #     set -e
+      #     printf '${{ secrets.PUB_CREDENTIALS }}' > ~/.config/dart/pub-credentials.json
+
+      #     dart pub publish --force
+      #   working-directory: ./packages/markup
+
+  bin_mac:
+    needs: build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Prepare Git
+        shell: bash
+        run: |
           set -e
-          printf '${{ secrets.PUB_CREDENTIALS }}' > ~/.config/dart/pub-credentials.json
 
-          dart pub publish --force
+          git config set user.name "${{ github.actor }}"
+          git config set user.email "${{ github.actor_email }}"
+
+      - name: Compile Binary
+        run: |
+          dart compile exe bin/markup.dart -o bin/markup
         working-directory: ./packages/markup
+
+      - name: Prepare Git
+        shell: bash
+        run: |
+          set -e
+
+          git config set user.name "${{ github.actor }}"
+          git config set user.email "${{ github.actor_email }}"
+
+      - uses: actions/checkout@v7
+        with:
+          ref: bin
+          fetch-depth: 0
+
+      - name: Update Binary
+        shell: bash
+        run: |
+          set -e
+
+          mkdir -p bin/macos/
+          cp -f packages/markup/bin/markup bin/macos/markup
+          chmod +x bin/macos/markup
+          git add bin/macos
+          git commit -m "Update macos binary"
+          git push
+
+  bin_windows:
+    needs: build_mac
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Prepare Git
+        shell: bash
+        run: |
+          set -e
+
+          git config set user.name "${{ github.actor }}"
+          git config set user.email "${{ github.actor_email }}"
+
+      - name: Compile Binary
+        run: |
+          dart compile exe bin/markup.dart -o bin/markup.exe
+        working-directory: ./packages/markup
+
+      - name: Prepare Git
+        shell: bash
+        run: |
+          set -e
+
+          git config set user.name "${{ github.actor }}"
+          git config set user.email "${{ github.actor_email }}"
+
+      - uses: actions/checkout@v7
+        with:
+          ref: bin
+          fetch-depth: 0
+
+      - name: Update Binary
+        shell: bash
+        run: |
+          set -e
+
+          if not exist "bin\windows" mkdir "bin\windows"
+          cp -f packages\markup\bin\markup.exe bin\windows\markup.exe
+          chmod +x bin\windows\markup
+          git add bin\windows
+          git commit -m "Update windows binary"
+          git push
