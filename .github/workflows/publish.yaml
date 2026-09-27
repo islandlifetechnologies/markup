@@ -95,14 +95,6 @@ jobs:
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
 
-      - name: Prepare Git
-        shell: bash
-        run: |
-          set -e
-
-          git config set user.name "${{ github.actor }}"
-          git config set user.email "${{ github.actor_email }}"
-
       - name: Compile Binary
         run: |
           dart compile exe bin/markup.dart -o bin/markup
@@ -156,14 +148,6 @@ jobs:
         run: |
           dart compile exe bin/markup.dart -o bin/markup.exe
         working-directory: ./packages/markup
-
-      - name: Prepare Git
-        shell: bash
-        run: |
-          set -e
-
-          git config set user.name "${{ github.actor }}"
-          git config set user.email "${{ github.actor_email }}"
 
       - uses: actions/checkout@v7
         with:
