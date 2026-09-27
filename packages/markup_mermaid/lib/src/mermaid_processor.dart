@@ -58,7 +58,7 @@ class MermaidProcessor(
           logger.finest('$name\n$io');
         }
 
-        exit(exitCode);
+        throw Exception('mmdc failed with exit code $exitCode');
       }
 
       if (logger.isLoggable(Level.FINEST)) {
@@ -66,6 +66,8 @@ class MermaidProcessor(
           logger.finest('$name\n$io');
         }
       }
+
+      logger.finest('mmdc completed with exit code of $exitCode');
 
       final cd = registry.fs.directory(doc.path);
       final path = p.relative(outFile.absolute.path, from: cd.absolute.path);
