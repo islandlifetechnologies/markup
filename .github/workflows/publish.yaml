@@ -176,9 +176,9 @@ jobs:
         run: |
           set -e
 
-          mkdir outbin\windows 2>nul
-          cp -f packages\markup\bin\markup.exe outbin\windows\markup.exe
-          chmod +x outbin\windows\markup.exe
+          mkdir outbin/windows 2>nul
+          cp -f packages/markup/bin/markup.exe outbin/windows/markup.exe
+          chmod +x outbin/windows/markup.exe
           cd outbin
           git add .
           git commit --allow-empty -m "Update windows binary"
