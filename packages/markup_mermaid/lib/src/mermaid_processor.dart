@@ -123,12 +123,11 @@ class MermaidProcessor(
         '--backgroundColor',
         _params.backgroundColor,
       ],
-      if (_params.height != null) ...['--height', _params.height],
       '--input',
       '-',
       if (_params.scale != null) ...['--scale', _params.scale],
+      if (_params.size != null) ...['--size', _params.size],
       if (_params.theme != null) ...['--theme', _params.theme],
-      if (_params.width != null) ...['--width', _params.width],
       '--outputFormat',
       outType,
       '--output',
@@ -156,13 +155,12 @@ class MermaidProcessor(
 @JsonSerializable()
 class _Params(
   final String? backgroundColor,
-  @JsonKey(fromJson: JsonClass.maybeParseInt) final int? height,
   final String? output,
   final String? outputFormat,
   @JsonKey(fromJson: JsonClass.maybeParseInt) final int? scale,
+  @JsonKey(fromJson: JsonClass.maybeParseInt) final int? size,
   final String? theme,
   final String? title,
-  @JsonKey(fromJson: JsonClass.maybeParseInt) final int? width,
 ) {
   factory fromJson(Map<String, dynamic> json) => _$ParamsFromJson(json);
 }

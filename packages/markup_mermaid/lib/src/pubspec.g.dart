@@ -24,6 +24,7 @@ const _$pubspec = (
     embed: "^1.6.6",
     iltLints: "^1.0.1",
     jsonSerializable: "^6.14.1",
+    markup: "^1.0.0",
     test: "^1.31.2",
   ),
 );
