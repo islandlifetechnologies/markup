@@ -23,6 +23,7 @@ jobs:
         run: |
           set -e
 
+          npm install -g @mermaid-js/mermaid-cli
           dart pub get
           dart format --set-exit-if-changed lib test
           dart run build_runner build
