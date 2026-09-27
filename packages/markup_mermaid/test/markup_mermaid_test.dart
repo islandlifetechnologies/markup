@@ -25,8 +25,6 @@ plugins:
       - bin/markup_mermaid.dart
       - --log
       - FINEST
-      - --log-file
-      - output/output.log
     replace: true
 ''');
 
