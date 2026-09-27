@@ -10,15 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: bin
-          path: bin
-
-      - name: Update path to include Markup
-        shell: bash
-        run: |
-          echo "$PWD/bin/linux" >> $GITHUB_PATH
+      - uses: islandlifetechnologies/markup@v1
 
       - shell: bash
         run: |
@@ -29,15 +21,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: bin
-          path: bin
-
-      - name: Update path to include Markup
-        shell: bash
-        run: |
-          echo "$PWD/bin/macos" >> $GITHUB_PATH
+      - uses: islandlifetechnologies/markup@v1
 
       - shell: bash
         run: |
@@ -48,15 +32,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: bin
-          path: bin
-
-      - name: Update path to include Markup
-        shell: bash
-        run: |
-          echo "$PWD/bin/windows" >> $GITHUB_PATH
+      - uses: islandlifetechnologies/markup@v1
 
       - shell: bash
         run: |

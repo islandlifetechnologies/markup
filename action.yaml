@@ -1,0 +1,31 @@
+name: "Setup Markup"
+description: "Pull down and set up the Markup binaries"
+author: "islandlifetech"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v7
+      with:
+        repository: https://github.com/islandlifetechnologies/markup
+        ref: bin
+        path: .markup/bin
+
+    - name: Update path to include Markup - Linux
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        echo "$PWD/.markup/bin/linux" >> $GITHUB_PATH
+
+    - name: Update path to include Markup - MacOS
+      if: runner.os == 'macOS'
+      shell: bash
+      run: |
+        echo "$PWD/.markup/bin/macos" >> $GITHUB_PATH
+
+    - name: Update path to include Markup - Windows
+      if: runner.os == 'Windows'
+      shell: bash
+      run: |
+        echo "$PWD/.markup/bin/windows" >> $GITHUB_PATH
