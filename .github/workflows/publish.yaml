@@ -45,18 +45,19 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
-          ref: bin
           fetch-depth: 0
+          ref: bin
+          path: outbin
 
       - name: Update Binary
         shell: bash
         run: |
           set -e
 
-          mkdir -p bin/linux/
-          cp -f packages/markup/bin/markup bin/linux/markup
-          chmod +x bin/linux/markup
-          git add bin/linux
+          mkdir -p outbin/linux/
+          cp -f packages/markup/bin/markup outbin/linux/markup
+          chmod +x outbin/linux/markup
+          git add outbin/linux
           git commit -m "Update linux binary"
           git push
 
@@ -116,18 +117,19 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
-          ref: bin
           fetch-depth: 0
+          path: outbin
+          ref: bin
 
       - name: Update Binary
         shell: bash
         run: |
           set -e
 
-          mkdir -p bin/macos/
-          cp -f packages/markup/bin/markup bin/macos/markup
-          chmod +x bin/macos/markup
-          git add bin/macos
+          mkdir -p outbin/macos/
+          cp -f packages/markup/bin/markup outbin/macos/markup
+          chmod +x outbin/macos/markup
+          git add outbin/macos
           git commit -m "Update macos binary"
           git push
 
@@ -163,17 +165,18 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
-          ref: bin
           fetch-depth: 0
+          path: outbin
+          ref: bin
 
       - name: Update Binary
         shell: bash
         run: |
           set -e
 
-          if not exist "bin\windows" mkdir "bin\windows"
-          cp -f packages\markup\bin\markup.exe bin\windows\markup.exe
-          chmod +x bin\windows\markup
-          git add bin\windows
+          if not exist "outbin\windows" mkdir "outbin\windows"
+          cp -f packages\markup\bin\markup.exe outbin\windows\markup.exe
+          chmod +x outbin\windows\markup.exe
+          git add outbin\windows
           git commit -m "Update windows binary"
           git push
