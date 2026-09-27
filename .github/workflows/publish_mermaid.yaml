@@ -176,9 +176,10 @@ jobs:
       - name: Update Binary
         shell: bash
         run: |
-          set -e
+          set +e
 
           mkdir outbin/windows 2>nul
+          set -e
           cp -f packages/markup_mermaid/bin/markup_mermaid.exe outbin/windows/markup_mermaid.exe
           chmod +x outbin/windows/markup_mermaid.exe
           cd outbin
