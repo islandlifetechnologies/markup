@@ -32,6 +32,25 @@ jobs:
           dart test
         working-directory: ./packages/markup_mermaid
 
+      - name: Compile Binary
+        run: |
+          dart compile exe bin/markup_mermaid.dart -o bin/markup_mermaid
+        working-directory: ./packages/markup_mermaid
+
+      - name: Prepare Git
+        shell: bash
+        run: |
+          set -e
+
+          git config --global user.email "action@github.com"
+          git config --global user.name "Github Action"
+
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: bin
+          path: outbin
+
       - name: Update Binary
         shell: bash
         run: |
