@@ -84,7 +84,7 @@ jobs:
       #     dart pub publish --force
       #   working-directory: ./packages/markup
 
-  bin_mac:
+  build_macos:
     needs: build
     runs-on: macos-latest
     steps:
@@ -132,7 +132,7 @@ jobs:
           git push
 
   bin_windows:
-    needs: build_mac
+    needs: build_macos
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
