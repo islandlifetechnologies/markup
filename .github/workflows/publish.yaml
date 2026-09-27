@@ -59,7 +59,7 @@ jobs:
           chmod +x outbin/linux/markup
           cd outbin
           git add .
-          git commit -m "Update linux binary"
+          git commit --allow-empty -m "Update linux binary"
           git push
 
       # - name: Create Tag
@@ -132,7 +132,7 @@ jobs:
           chmod +x outbin/macos/markup
           cd outbin
           git add .
-          git commit -m "Update macos binary"
+          git commit --allow-empty -m "Update macos binary"
           git push
 
   bin_windows:
@@ -181,5 +181,5 @@ jobs:
           chmod +x outbin\windows\markup.exe
           cd outbin
           git add .
-          git commit -m "Update windows binary"
+          git commit --allow-empty -m "Update windows binary"
           git push
