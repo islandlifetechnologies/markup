@@ -107,8 +107,8 @@ jobs:
 
       - name: Compile Binary
         run: |
-          dart compile exe bin/markup.dart -o bin/markup
-        working-directory: ./packages/markup
+          dart compile exe bin/markup_mermaid.dart -o bin/markup_mermaid
+        working-directory: ./packages/markup_mermaid
 
       - name: Prepare Git
         shell: bash
