@@ -108,6 +108,16 @@ class MermaidProcessor(
     if (!outFile.parent.existsSync()) {
       outFile.parent.createSync(recursive: true);
     }
+
+    final pc = registry.fs.file('puppeteerConfig.json');
+    if (!pc.existsSync()) {
+      pc.createSync(recursive: true);
+      pc.writeAsStringSync(
+        '{ "args": ["--no-sandbox", "--disable-setuid-sandbox"] }',
+        flush: true,
+      );
+    }
+
     final args = [
       if (_params.backgroundColor != null) ...[
         '--backgroundColor',
@@ -123,6 +133,8 @@ class MermaidProcessor(
       outType,
       '--output',
       outFile.absolute.path,
+      '--puppeteerConfigFile',
+      pc.absolute.path,
     ].map((arg) => arg.toString()).toList();
 
     final content = await runner(
