@@ -40,7 +40,11 @@ class MermaidProcessor(
   }) async {
     try {
       logger.info('Preparing to run: mmdc ${args.join(' ')}');
-      final process = await Process.start('mmdc', args);
+      final process = await Process.start(
+        'mmdc',
+        args,
+        environment: {'args': '--no-sandbox --disable-setuid-sandbox'},
+      );
 
       logger.info('Sending diagram content.');
       logger.finest(diagramContent);
