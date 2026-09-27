@@ -11,33 +11,36 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-        ref: bin
-        path: bin
+        with:
+          ref: bin
+          path: bin
 
       - shell: bash
         run: |
-          linux/markup --help
+          bin/linux/markup --help
 
   test-macos:
     runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v7
-        ref: bin
-        path: bin
+        with:
+          ref: bin
+          path: bin
 
       - shell: bash
         run: |
-          macos/markup --help
+          bin/macos/markup --help
 
   test-windows:
     runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v7
-        ref: bin
-        path: bin
+        with:
+          ref: bin
+          path: bin
 
       - shell: bash
         run: |
-          windows/markup --help
+          bin/windows/markup --help
