@@ -8,7 +8,7 @@ runs:
     - name: Checkout
       uses: actions/checkout@v7
       with:
-        repository: https://github.com/islandlifetechnologies/markup
+        repository: islandlifetechnologies/markup
         ref: bin
         path: .markup/bin
 
